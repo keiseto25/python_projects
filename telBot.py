@@ -1,22 +1,19 @@
 import telegram
-from telegram.ext import Updater, CommandHandler
+from flask import Flask, request
 
-# Define a function to get the user ID
-def get_user_id(update, context):
-    user_id = update.message.from_user.id
-    context.bot.send_message(chat_id=update.effective_chat.id, text="Your user ID is: " + str(user_id))
+# Create a Flask app instance
+app = Flask(__name__)
 
-# Create an Updater object with your bot token
-updater = Updater('6043717452:AAFkYEE7IMMuc_aYaTf9N3ZxXIcs4XLJrcQ', use_context=True)
+# Define a function to handle the /id command
+@app.route('/id', methods=['POST'])
+def get_user_id():
+    # Get the user ID from the request
+    user_id = request.json['message']['from']['id']
+    # Send a message back to the user with their ID
+    bot = telegram.Bot('6043717452:AAFkYEE7IMMuc_aYaTf9N3ZxXIcs4XLJrcQ')
+    bot.send_message(chat_id=request.json['message']['chat']['id'], text="Your user ID is: " + str(user_id))
+    return ''
 
-# Get the Dispatcher object from the Updater object
-dp = updater.dispatcher
+if __name__ == '__main__':
+    app.run()
 
-# Define the /id command handler
-dp.add_handler(CommandHandler('id', get_user_id))
-
-# Start polling for updates
-updater.start_polling()
-
-# Run the bot until the user presses Ctrl-C
-updater.idle()
