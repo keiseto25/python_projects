@@ -4,6 +4,10 @@ from flask import Flask, request
 # Create a Flask app instance
 app = Flask(__name__)
 
+@app.route('/')
+def index():
+    return 'Hello, world!'
+
 # Define a function to handle the /id command
 @app.route('/id', methods=['POST'])
 def get_user_id():
