@@ -8,6 +8,7 @@ app = Flask(__name__)
 
 def get_user_id(update, context):
     user_id = update.message.from_user.id
+    print("get user id function")
     context.bot.send_message(
         chat_id=update.effective_chat.id, text="Your user ID is: " + str(user_id))
 

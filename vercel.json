@@ -11,10 +11,6 @@
       {
         "src": "/",
         "dest": "/telBot.py"
-      },
-      {
-        "src": "/id",
-        "dest": "/telBot.py"
       }
     ]
   }
