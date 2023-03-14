@@ -28,7 +28,7 @@ def webhook():
 
 if __name__ == '__main__':
     bot_token = '6043717452:AAFkYEE7IMMuc_aYaTf9N3ZxXIcs4XLJrcQ'
-    webhook_url = 'https://python-projects-git-main-keiseto25.vercel.app/webhook'
+    webhook_url = 'https://python-projects-khaki.vercel.app//webhook'
     bot = telegram.Bot(bot_token)
     bot.setWebhook(url=webhook_url)
     dispatcher = telegram.ext.Dispatcher(bot, None)
