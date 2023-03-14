@@ -1,0 +1,12 @@
+{
+    "builds": [
+      { "src": "telBot.py", "use": "@now/python" }
+    ],
+    "routes": [
+      { "src": "/", "dest": "telBot.py" }
+    ],
+    "env": {
+      "PORT": "3000"
+    }
+  }
+  
