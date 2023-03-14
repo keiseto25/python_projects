@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 # Define a function to handle the /id command
 
-
+@app.route('/id', methods=['GET'])
 def get_user_id(update, context):
     user_id = update.message.from_user.id
     print("get user id function")
