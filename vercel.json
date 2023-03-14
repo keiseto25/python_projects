@@ -1,0 +1,17 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "telBot.py",
+        "use": "@vercel/python",
+        "config": {}
+      }
+    ],
+    "routes": [
+      {
+        "src": "/",
+        "dest": "/telBot.py"
+      }
+    ]
+  }
+  
