@@ -138,9 +138,17 @@ def handle_callback(update):
 
         # Get user input for low_price and high_price
         sendMsg(chat_id, 'Valor inicial:')
+        tmp = request.get_json()
+        while 'message' not in json.dumps(tmp):
+            tmp = request.get_json()
+            break
         low_price_message = update['message']['text']
         lowPrice = float(low_price_message.text)
         sendMsg(chat_id, 'Valor final:')
+        tmp = request.get_json()
+        while 'message' not in json.dumps(tmp):
+            tmp = request.get_json()
+            break
         high_price_message = update['message']['text']
         highPrice = float(high_price_message.text)
 
