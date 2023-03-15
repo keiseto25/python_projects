@@ -51,6 +51,7 @@ def start(chat_id):
         }
     }
     r = requests.post(url, json=payload)
+    print("start-->", payload)
     # sendMsg(chat_id,"Digite o valor mínimo da pool:")
     # lowPrice = request.json['message']['text']
     # sendMsg(chat_id,"Digite o valor máximo da pool:")
@@ -63,6 +64,7 @@ def handle_callback(update):
     query = update['callback_query']
     chat_id = query['message']['chat']['id']
     choice = query['data']
+    message_id = query['message']['message_id']
 
     # Perform action based on user choice
     if choice == '0xa374094527e1673a86de625aa59517c5de346d32':
@@ -79,6 +81,15 @@ def handle_callback(update):
         'text': message
     }
     response = requests.post(url, json=payload)
+    print("handle_callback-->", payload)
+
+    # Hide the reply_markup
+    url = f'https://api.telegram.org/bot{TOKEN}/editMessageReplyMarkup'
+    payload = {
+        'chat_id': chat_id,
+        'message_id': message_id,
+        'reply_markup': {'inline_keyboard': []}
+    }
     return response.json()
 
 
