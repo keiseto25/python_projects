@@ -1,9 +1,11 @@
+import datetime
 from flask import Flask
 from flask import request
 from flask import Response
 from info import bot_token
 import requests
 import json
+import pytz
 
 app = Flask(__name__)
 TOKEN = bot_token
@@ -69,9 +71,11 @@ def handle_callback(update):
     # Perform action based on user choice
     if choice == '0xa374094527e1673a86de625aa59517c5de346d32':
         # Do something for MATIC/USDC pair
+        pool_id = choice
         message = "You selected MATIC/USDC."
     elif choice == '0x9b08288c3be4f62bbf8d1c20ac9c5e6f9467d8b7':
         # Do something for MATIC/USDT pair
+        pool_id = choice
         message = "You selected MATIC/USDT."
 
     # Send message to user to confirm their choice
@@ -92,7 +96,69 @@ def handle_callback(update):
     }
     response = requests.post(url, json=payload)
 
+    # Send request to subgraph API
+    subgraph_url = 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon'
+    query = """
+    {
+      pool(id:""" + pool_id + """){
+        token0 {
+          id
+          symbol
+        }
+        token0Price
+        token1 {
+          id
+          symbol
+        }
+        token1Price
+      }
+    }
+    """
+
+    response = requests.post(subgraph_url, headers={
+                             'Content-Type': 'application/json'}, json={'query': query})
+    data = response.json()
+    pool = data['data']['pool']
+    token0, token0_price, token1, token1_price = pool['token0'], pool[
+        'token0Price'], pool['token1'], pool['token1Price']
+    tPrice = float(token1_price)
+    t0Symbol = token0['symbol']
+    t1Symbol = token1['symbol']
+    timestamp = datetime.now(pytz.timezone(
+        'America/Sao_Paulo')).strftime('%d/%m/%Y %H:%M:%S')
+
+    # Get user input for low_price and high_price
+    sendMsg(chat_id, 'Valor inicial:')
+    low_price_message = update['message']['text']
+    lowPrice = float(low_price_message.text)
+    sendMsg(chat_id, 'Valor final:')
+    high_price_message = update['message']['text']
+    highPrice = float(high_price_message.text)
+
+    pVariationlow = ((float(lowPrice) - tPrice) / float(lowPrice)) * 100
+    pVariationhigh = ((tPrice - float(highPrice)) / float(highPrice)) * 100
+
+    if (tPrice < lowPrice):
+        txt = '⚠️⬇️ <b>[' + timestamp + ']</b> : ' + t0Symbol + '/' + t1Symbol + ' abaixo de ' + str(lowPrice) + ': \n\n 👉 ' + str(tPrice) + '(-' + str(round(pVariationlow, 2)) + '%)'
+        print(txt)
+        sendMsg(chat_id, txt)
+        wLog(txt)
+    elif (tPrice > highPrice):
+        txt = '⚠️⬆️ <b>[' + timestamp + ']</b> : ' + t0Symbol + '/' + t1Symbol + ' acima de ' + str(highPrice) + ': \n\n 👉 ' + str(tPrice) + '(+' + str(round(pVariationhigh, 2)) + '%)'
+        print(txt)
+        sendMsg(chat_id, txt)
+        wLog(txt)
+    else:
+        txt = '[' + timestamp + '] : ' + t0Symbol + '/' + t1Symbol + ' dentro intervalo de ' + str(lowPrice) + ' a ' + str(highPrice) + ': \n\n ' + str(tPrice)
+        print(txt)
+        wLog(txt)
+
     return response.json()
+
+def wLog(message):
+    with open('app.log', 'a') as f:
+        f.write(message + '\n')
+
 
 
 def sendMsg(chat_id, text):
