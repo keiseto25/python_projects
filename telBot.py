@@ -3,11 +3,9 @@ from flask import request
 from flask import Response
 from info import bot_token
 import requests
-import telegram
 
 app = Flask(__name__)
 TOKEN = bot_token
-bot = telegram.Bot(token=TOKEN)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -29,38 +27,28 @@ def index():
 def start(chat_id):
     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
 
-   # Create inline keyboard markup
-    keyboard = [
-        [
-            telegram.InlineKeyboardButton(
-                'MATIC/USDC', callback_data='0xa374094527e1673a86de625aa59517c5de346d32'),
-            telegram.InlineKeyboardButton(
-                'MATIC/USDT', callback_data='0x9b08288c3be4f62bbf8d1c20ac9c5e6f9467d8b7')
-        ]
-    ]
-    reply_markup = telegram.InlineKeyboardMarkup(keyboard)
-    # Send message with inline keyboard
-    bot.send_message(chat_id=chat_id, text='Selecione o par:',
-                     reply_markup=reply_markup)
+    payload = {
+        'chat_id': chat_id,
+        'text': "   Selecione o par:",
+        'reply_markup': {
+            "inline_keyboard": [[
+                {
+                    "text": "MATIC/USDC",
+                    "callback_data": "0xa374094527e1673a86de625aa59517c5de346d32"
+                },
+                {
+                    "text": "MATIC/USDT",
+                    "callback_data": "0x9b08288c3be4f62bbf8d1c20ac9c5e6f9467d8b7"
+                }]
+            ]
+        }
+    }
+    r = requests.post(url, json=payload)
+    #sendMsg(chat_id,"Digite o valor mínimo da pool:")
+    #lowPrice = request.json['message']['text']
+    #sendMsg(chat_id,"Digite o valor máximo da pool:")
+    #highPrice = request.json['message']['text']
 
-    # Wait for the two inputs
-    bot.send_message(chat_id=chat_id, text='Digite o valor mínimo da pool:')
-    lowPrice = None
-    while lowPrice is None:
-        updates = bot.get_updates()
-        for update in updates:
-            if update.message:
-                if update.message.chat_id == chat_id:
-                    lowPrice = update.message.text
-
-    bot.send_message(chat_id=chat_id, text='Digite o valor máximo da pool:')
-    highPrice = None
-    while highPrice is None:
-        updates = bot.get_updates()
-        for update in updates:
-            if update.message:
-                if update.message.chat_id == chat_id:
-                    highPrice = update.message.text
     return r
 
 
