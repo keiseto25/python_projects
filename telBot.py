@@ -104,7 +104,7 @@ def handle_callback(update):
     subgraph_url = 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon'
     query = """
         {
-        pool(id:""" + pool_id + """){
+        pool(id:'""" + pool_id + """'){
             token0 {
             id
             symbol
@@ -123,7 +123,7 @@ def handle_callback(update):
         'Content-Type': 'application/json'}, json={'query': query})
     data = response.json()
     print("Request--> " + query)
-    print("Response--> " + data)
+    print("Response--> " + json.dumps(data))
     pool = data['data']['pool']
     token0, token0_price, token1, token1_price = pool['token0'], pool[
         'token0Price'], pool['token1'], pool['token1Price']
