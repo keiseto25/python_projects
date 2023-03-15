@@ -15,7 +15,7 @@ def index():
         msg = request.get_json()
         msgS = json.dumps(msg)  # convert to string
 
-        if 'text' in msgS and 'callback_query' not in msgS and 'edited_message' not in msgS:
+        if 'text' in msgS and 'callback_query' not in msgS:
             # retrieve chat_id and txt from msg
             chat_id, txt = parse_message(msg)
             if txt == "/id":
@@ -93,12 +93,12 @@ def handle_callback(update):
     response = requests.post(url, json=payload)
 
     # Hide the text above the buttons
-    url = f'https://api.telegram.org/bot{TOKEN}/editMessageText'
-    payload = {
-        'chat_id': chat_id,
-        'message_id': message_id,
-        'text': ""
-    }
+    #url = f'https://api.telegram.org/bot{TOKEN}/editMessageText'
+    #payload = {
+    #    'chat_id': chat_id,
+    #    'message_id': message_id,
+    #    'text': ""
+    #}
     response = requests.post(url, json=payload)
 
     return response.json()
