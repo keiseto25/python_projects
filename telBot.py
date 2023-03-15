@@ -3,6 +3,7 @@ from flask import request
 from flask import Response
 from info import bot_token
 import requests
+import json
 
 app = Flask(__name__)
 TOKEN = bot_token
@@ -93,7 +94,7 @@ def parse_message(message):
     print("message-->", message)
     chat_id = message['message']['chat']['id']
 
-    if "text" in message:
+    if "text" in json.loads(message):
         txt = message['message']['text']
     else:
         txt = None
