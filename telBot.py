@@ -26,9 +26,10 @@ def index():
                 sendMsg(chat_id, "Your user id: " + str(chat_id))
             elif txt == "/start":
                 start(chat_id)
+            elif 'Você selecionou MATIC/USDC' in msgS or 'Você selecionou MATIC/USDT' in msgS:
+                handle_input(msg)
             return Response('ok', status=200)
-        elif 'Você selecionou MATIC/USDC' in msgS or 'Você selecionou MATIC/USDT' in msgS:
-            handle_input(msg)
+
         elif 'callback_query' in msgS:
             handle_callback(msg)
             return Response('ok', status=200)
@@ -78,10 +79,10 @@ def handle_callback(update):
 
     # Perform action based on user choice
     if choice == '0xa374094527e1673a86de625aa59517c5de346d32':
-        # Do something for MATIC/USDC pair    
+        # Do something for MATIC/USDC pair
         message = "Você selecionou MATIC/USDC."
     elif choice == '0x9b08288c3be4f62bbf8d1c20ac9c5e6f9467d8b7':
-        # Do something for MATIC/USDT pair        
+        # Do something for MATIC/USDT pair
         message = "Você selecionou MATIC/USDT."
 
     # Send message to user to confirm their choice
