@@ -14,7 +14,7 @@ TOKEN = bot_token
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        
+
         msg = request.get_json()
         print(msg)
         msgS = json.dumps(msg)  # convert to string
@@ -69,8 +69,10 @@ def handle_callback(update):
     queryS = json.dumps(query)
     chat_id = query['message']['chat']['id']
     print(query)
-    if 'reply_markup' in queryS:
-        handleChoice(query, chat_id)
+    pool_id = None
+
+    if pool_id == None in queryS:
+        pool_id = handleChoice(query, chat_id)
     else:
         # Send request to subgraph API
         subgraph_url = 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon'
@@ -149,6 +151,7 @@ def handleChoice(query, chat_id):
         # Do something for MATIC/USDT pair
         pool_id = choice
         message = "You selected MATIC/USDT."
+    return pool_id
 
     # Send message to user to confirm their choice
     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
