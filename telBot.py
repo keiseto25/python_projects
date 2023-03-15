@@ -15,7 +15,7 @@ def index():
         msg = request.get_json()
         msgS = json.dumps(msg)  # convert to string
 
-        if 'text' in msgS and 'callback_query' not in msgS:
+        if 'text' in msgS and 'callback_query' not in msgS and 'edited_message' not in msgS:
             # retrieve chat_id and txt from msg
             chat_id, txt = parse_message(msg)
             if txt == "/id":
