@@ -26,15 +26,13 @@ def index():
                 sendMsg(chat_id, "Your user id: " + str(chat_id))
             elif txt == "/start":
                 start(chat_id)
+            elif 'Você selecionou' in msgS:  # handle após usuario selecionar o par
+                handle_input(msg)
 
             return Response('ok', status=200)
 
         elif 'callback_query' in msgS:
-            if 'Você selecionou' in msgS:
-                print(msg)
-                handle_input(msg)
-            else:
-                handle_callback(msg)
+            handle_callback(msg)
             return Response('ok', status=200)
 
     else:
@@ -96,6 +94,12 @@ def handle_callback(update):
     }
     response = requests.post(url, json=payload)
     print("handle_callback-->", payload)
+    # JSON com as informações relevantes para voltar no return e ser usado no handle_input
+    info = {
+        'chat_id': chat_id,
+        'text': message,
+        'data': choice
+    }
 
     # Hide the reply_markup
     url = f'https://api.telegram.org/bot{TOKEN}/editMessageReplyMarkup'
@@ -106,12 +110,12 @@ def handle_callback(update):
     }
     response = requests.post(url, json=payload)
     print("response-->", response.json())
-    return response.json()
+    return info
 
 
-def handle_input(update):
-    chat_id = update['message']['chat']['id']
-    pool_id = update['data']
+def handle_input(query):
+    chat_id = query['chat_id']
+    pool_id = query['data']
     # Send request to subgraph API
     subgraph_url = 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon'
     query = """
