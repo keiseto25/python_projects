@@ -92,15 +92,6 @@ def handle_callback(update):
     }
     response = requests.post(url, json=payload)
 
-    # Hide the text above the buttons
-    #url = f'https://api.telegram.org/bot{TOKEN}/editMessageText'
-    #payload = {
-    #    'chat_id': chat_id,
-    #    'message_id': message_id,
-    #    'text': ""
-    #}
-    #response = requests.post(url, json=payload)
-
     return response.json()
 
 
