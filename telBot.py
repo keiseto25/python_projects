@@ -71,7 +71,7 @@ def handle_callback(update):
     print(query)
     pool_id = None
 
-    if pool_id == None in queryS:
+    if pool_id is None in queryS:
         pool_id = handleChoice(query, chat_id)
     else:
         # Send request to subgraph API
