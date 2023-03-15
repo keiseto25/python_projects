@@ -28,7 +28,7 @@ def start(chat_id):
 
     payload = {
         'chat_id': chat_id,
-        'text': "Selecione o par:",
+        'text': "   Selecione o par:",
         'reply_markup': {
             "inline_keyboard": [[
                 {
@@ -43,6 +43,11 @@ def start(chat_id):
         }
     }
     r = requests.post(url, json=payload)
+    sendMsg(chat_id,"Digite o valor mínimo da pool:")
+    lowPrice = request.json['message']['text']
+    sendMsg(chat_id,"Digite o valor máximo da pool:")
+    highPrice = request.json['message']['text']
+
     return r
 
 
