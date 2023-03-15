@@ -14,6 +14,7 @@ TOKEN = bot_token
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
+        print(msg)
         msg = request.get_json()
         msgS = json.dumps(msg)  # convert to string
 
@@ -66,7 +67,7 @@ def handle_callback(update):
     query = update['callback_query']
     queryS = json.dumps(query)
     chat_id = query['message']['chat']['id']
-
+    print(query)
     if 'reply_markup' in queryS:
         handleChoice(query, chat_id)
     else:
