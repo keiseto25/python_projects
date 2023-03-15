@@ -13,7 +13,10 @@ def index():
     if request.method == 'POST':
         msg = request.get_json()
         # retrieve chat_id and txt from msg
-        chat_id, txt = parse_message(msg)
+        if 'text' in msg:
+            chat_id, txt = parse_message(msg)
+        else:
+            chat_id = msg['message']['chat']['id']
 
         if txt is not None and txt != "":
 
@@ -90,19 +93,14 @@ def sendMsg(chat_id, text):
 
 
 def parse_message(message):
-    try:
-        print("message-->", message)
-        chat_id = message['message']['chat']['id']
 
-        try:
-            txt = message['message']['text']
-        except:
-            txt = None
-        print("chat_id-->", chat_id)
-        print("txt-->", txt)
-    except:
-        print("No message key found.")
-        chat_id , txt = None
+    print("message-->", message)
+    chat_id = message['message']['chat']['id']
+    txt = message['message']['text']
+
+    print("chat_id-->", chat_id)
+    print("txt-->", txt)
+
     return chat_id, txt
 
 
