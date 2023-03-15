@@ -3,6 +3,7 @@ from flask import request
 from flask import Response
 from info import bot_token
 import requests
+import json
 
 app = Flask(__name__)
 TOKEN = bot_token
@@ -12,7 +13,8 @@ TOKEN = bot_token
 def index():
     if request.method == 'POST':
         msg = request.get_json()
-        print(msg)
+        msgS = json.dumps(msg)
+        print('toString: '+ msgS)
         # retrieve chat_id and txt from msg
         if 'text' in msg:
             chat_id, txt = parse_message(msg)
