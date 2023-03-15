@@ -90,6 +90,8 @@ def handle_callback(update):
         'message_id': message_id,
         'reply_markup': {'inline_keyboard': []}
     }
+    response = requests.post(url, json=payload)
+
     return response.json()
 
 
