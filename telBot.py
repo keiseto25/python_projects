@@ -105,7 +105,7 @@ def handle_callback(update):
         'reply_markup': {'inline_keyboard': []}
     }
     response = requests.post(url, json=payload)
-
+    print("response-->", response)
     return response.json()
 
 
