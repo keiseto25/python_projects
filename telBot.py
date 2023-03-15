@@ -132,8 +132,7 @@ def handle_callback(update):
                 ': \n\n ' + str(tPrice)
             print(txt)
             wLog(txt)
-
-    return response.json()
+        return response.json()
 
 
 def handleChoice(query, chat_id):
