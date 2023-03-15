@@ -122,7 +122,8 @@ def handle_callback(update):
     response = requests.post(subgraph_url, headers={
         'Content-Type': 'application/json'}, json={'query': query})
     data = response.json()
-    print(data)
+    print("Request--> " + query)
+    print("Response--> " + data)
     pool = data['data']['pool']
     token0, token0_price, token1, token1_price = pool['token0'], pool[
         'token0Price'], pool['token1'], pool['token1Price']
