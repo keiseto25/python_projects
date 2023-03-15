@@ -15,13 +15,10 @@ def index():
         # retrieve chat_id and txt from msg
         if 'text' in msg:
             chat_id, txt = parse_message(msg)
-        else:
-            chat_id = msg['message']['chat']['id']
-
-        if txt == "/id":
-            sendMsg(chat_id, "Your user id: " + str(chat_id))
-        elif txt == "/start":
-            start(chat_id)
+            if txt == "/id":
+                sendMsg(chat_id, "Your user id: " + str(chat_id))
+            elif txt == "/start":
+                start(chat_id)
 
         return Response('ok', status=200)
     else:
