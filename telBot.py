@@ -14,8 +14,9 @@ TOKEN = bot_token
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        print(msg)
+        
         msg = request.get_json()
+        print(msg)
         msgS = json.dumps(msg)  # convert to string
 
         if 'text' in msgS and 'callback_query' not in msgS:
