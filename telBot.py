@@ -104,7 +104,7 @@ def handle_callback(update):
     subgraph_url = 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon'
     query = """
         {
-        pool(id:'""" + pool_id + """'){
+        pool(id:\"""" + pool_id + """\"){
             token0 {
             id
             symbol
