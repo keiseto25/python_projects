@@ -49,7 +49,29 @@ def start(chat_id):
     #sendMsg(chat_id,"Digite o valor máximo da pool:")
     #highPrice = request.json['message']['text']
 
-    return r
+    return r.json()
+
+def handle_callback(update):
+    query = update['callback_query']
+    chat_id = query['message']['chat']['id']
+    choice = query['data']
+
+    # Perform action based on user choice
+    if choice == '0xa374094527e1673a86de625aa59517c5de346d32':
+        # Do something for MATIC/USDC pair
+        message = "You selected MATIC/USDC."
+    elif choice == '0x9b08288c3be4f62bbf8d1c20ac9c5e6f9467d8b7':
+        # Do something for MATIC/USDT pair
+        message = "You selected MATIC/USDT."
+
+    # Send message to user to confirm their choice
+    url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
+    payload = {
+        'chat_id': chat_id,
+        'text': message
+    }
+    response = requests.post(url, json=payload)
+    return response.json()
 
 
 def sendMsg(chat_id, text):
