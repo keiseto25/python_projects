@@ -30,7 +30,8 @@ def index():
             return Response('ok', status=200)
 
         elif 'callback_query' in msgS:
-            if 'Você selecionou MATIC/USDC' in msgS or 'Você selecionou MATIC/USDT' in msgS:
+            if 'Você selecionou' in msgS:
+                print(msg)
                 handle_input(msg)
             else:
                 handle_callback(msg)
@@ -104,7 +105,6 @@ def handle_callback(update):
         'reply_markup': {'inline_keyboard': []}
     }
     response = requests.post(url, json=payload)
-
 
     return response.json()
 
