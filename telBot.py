@@ -118,7 +118,7 @@ def handle_callback(update):
     response = requests.post(subgraph_url, headers={
                              'Content-Type': 'application/json'}, json={'query': query})
     data = response.json()
-    pool = data['data']['pool']
+    pool = data['pool']
     token0, token0_price, token1, token1_price = pool['token0'], pool[
         'token0Price'], pool['token1'], pool['token1Price']
     tPrice = float(token1_price)
@@ -139,26 +139,31 @@ def handle_callback(update):
     pVariationhigh = ((tPrice - float(highPrice)) / float(highPrice)) * 100
 
     if (tPrice < lowPrice):
-        txt = '⚠️⬇️ <b>[' + timestamp + ']</b> : ' + t0Symbol + '/' + t1Symbol + ' abaixo de ' + str(lowPrice) + ': \n\n 👉 ' + str(tPrice) + '(-' + str(round(pVariationlow, 2)) + '%)'
+        txt = '⚠️⬇️ <b>[' + timestamp + ']</b> : ' + t0Symbol + '/' + t1Symbol + ' abaixo de ' + \
+            str(lowPrice) + ': \n\n 👉 ' + str(tPrice) + \
+            '(-' + str(round(pVariationlow, 2)) + '%)'
         print(txt)
         sendMsg(chat_id, txt)
         wLog(txt)
     elif (tPrice > highPrice):
-        txt = '⚠️⬆️ <b>[' + timestamp + ']</b> : ' + t0Symbol + '/' + t1Symbol + ' acima de ' + str(highPrice) + ': \n\n 👉 ' + str(tPrice) + '(+' + str(round(pVariationhigh, 2)) + '%)'
+        txt = '⚠️⬆️ <b>[' + timestamp + ']</b> : ' + t0Symbol + '/' + t1Symbol + ' acima de ' + \
+            str(highPrice) + ': \n\n 👉 ' + str(tPrice) + \
+            '(+' + str(round(pVariationhigh, 2)) + '%)'
         print(txt)
         sendMsg(chat_id, txt)
         wLog(txt)
     else:
-        txt = '[' + timestamp + '] : ' + t0Symbol + '/' + t1Symbol + ' dentro intervalo de ' + str(lowPrice) + ' a ' + str(highPrice) + ': \n\n ' + str(tPrice)
+        txt = '[' + timestamp + '] : ' + t0Symbol + '/' + t1Symbol + ' dentro intervalo de ' + \
+            str(lowPrice) + ' a ' + str(highPrice) + ': \n\n ' + str(tPrice)
         print(txt)
         wLog(txt)
 
     return response.json()
 
+
 def wLog(message):
     with open('app.log', 'a') as f:
         f.write(message + '\n')
-
 
 
 def sendMsg(chat_id, text):
