@@ -99,7 +99,7 @@ def handle_callback(update):
     #    'message_id': message_id,
     #    'text': ""
     #}
-    response = requests.post(url, json=payload)
+    #response = requests.post(url, json=payload)
 
     return response.json()
 
