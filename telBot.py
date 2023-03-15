@@ -18,12 +18,10 @@ def index():
         else:
             chat_id = msg['message']['chat']['id']
 
-        if txt is not None and txt != "":
-
-            if txt == "/id":
-                sendMsg(chat_id, "Your user id: " + str(chat_id))
-            elif txt == "/start":
-                start(chat_id)
+        if txt == "/id":
+            sendMsg(chat_id, "Your user id: " + str(chat_id))
+        elif txt == "/start":
+            start(chat_id)
 
         return Response('ok', status=200)
     else:
