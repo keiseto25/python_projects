@@ -138,8 +138,6 @@ def handle_callback(update):
 
         # Get user input for low_price and high_price
         sendMsg(chat_id, 'Valor inicial:')
-    else:
-
         low_price_message = update['message']['text']
         lowPrice = float(low_price_message.text)
         sendMsg(chat_id, 'Valor final:')
@@ -148,6 +146,7 @@ def handle_callback(update):
 
         pVariationlow = ((float(lowPrice) - tPrice) / float(lowPrice)) * 100
         pVariationhigh = ((tPrice - float(highPrice)) / float(highPrice)) * 100
+    else:
 
         if (tPrice < lowPrice):
             txt = '⚠️⬇️ <b>[' + timestamp + ']</b> : ' + t0Symbol + '/' + t1Symbol + ' abaixo de ' + \
