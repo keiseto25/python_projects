@@ -90,16 +90,18 @@ def sendMsg(chat_id, text):
 
 
 def parse_message(message):
-    print("message-->", message)
-    chat_id = message['message']['chat']['id']
-
     try:
-        txt = message['message']['text']
-    except:
-        txt = None
+        print("message-->", message)
+        chat_id = message['message']['chat']['id']
 
-    print("chat_id-->", chat_id)
-    print("txt-->", txt)
+        try:
+            txt = message['message']['text']
+        except:
+            txt = None
+        print("chat_id-->", chat_id)
+        print("txt-->", txt)
+    except:
+        print("No message key found.")
     return chat_id, txt
 
 
