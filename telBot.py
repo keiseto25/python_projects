@@ -16,7 +16,7 @@ def index():
         msgS = json.dumps(msg)
         print('toString: '+ msgS)
         # retrieve chat_id and txt from msg
-        if 'text' in msg:
+        if 'text' in msgS:
             chat_id, txt = parse_message(msg)
             if txt == "/id":
                 sendMsg(chat_id, "Your user id: " + str(chat_id))
