@@ -13,10 +13,10 @@ TOKEN = bot_token
 def index():
     if request.method == 'POST':
         msg = request.get_json()
-        msgS = json.dumps(msg)
-        print('toString: '+ msgS)
-        # retrieve chat_id and txt from msg
-        if 'text' in msgS:
+        msgS = json.dumps(msg)  # convert to string
+
+        if 'text' in msgS and 'callback_query' not in msgS:
+            # retrieve chat_id and txt from msg
             chat_id, txt = parse_message(msg)
             if txt == "/id":
                 sendMsg(chat_id, "Your user id: " + str(chat_id))
