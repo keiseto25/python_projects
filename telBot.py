@@ -18,7 +18,7 @@ def index():
         msg = request.get_json()
         print(msg)
         msgS = json.dumps(msg)  # convert to string
-        m_ids = set()
+        
         if 'text' in msgS and 'callback_query' not in msgS:
             # retrieve chat_id and txt from msg
             chat_id, txt = parse_message(msg)
@@ -28,7 +28,7 @@ def index():
                 start(chat_id)
             return Response('ok', status=200)
         elif 'callback_query' in msgS:
-            handle_callback(msg, m_ids)
+            handle_callback(msg)
             return Response('ok', status=200)
 
     else:
@@ -64,7 +64,7 @@ def start(chat_id):
     return r.json()
 
 
-def handle_callback(update, m_ids):
+def handle_callback(update):
     query = update['callback_query']
     queryS = json.dumps(query)
     chat_id = query['message']['chat']['id']
@@ -73,7 +73,8 @@ def handle_callback(update, m_ids):
 
     choice = query['data']
     message_id = query['message']['message_id']
-    if message_id not in m_ids:
+
+    if "You selected MATIC/USDC." not in queryS and "You selected MATIC/USDT." not in queryS:
         m_ids.add(message_id)
         # Perform action based on user choice
         if choice == '0xa374094527e1673a86de625aa59517c5de346d32':
