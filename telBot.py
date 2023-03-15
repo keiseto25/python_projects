@@ -55,8 +55,9 @@ def start(chat_id):
         }
     }
     r = requests.post(url, json=payload)
+    update = r.json()
     print("start-->", payload)
-    query = r['callback_query']
+    query = update['callback_query']
     queryS = json.dumps(query)
     chat_id = query['message']['chat']['id']
 
