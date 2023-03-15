@@ -26,12 +26,14 @@ def index():
                 sendMsg(chat_id, "Your user id: " + str(chat_id))
             elif txt == "/start":
                 start(chat_id)
-            elif 'Você selecionou MATIC/USDC' in msgS or 'Você selecionou MATIC/USDT' in msgS:
-                handle_input(msg)
+
             return Response('ok', status=200)
 
         elif 'callback_query' in msgS:
-            handle_callback(msg)
+            if 'Você selecionou MATIC/USDC' in msgS or 'Você selecionou MATIC/USDT' in msgS:
+                handle_input(msg)
+            else:
+                handle_callback(msg)
             return Response('ok', status=200)
 
     else:
@@ -102,6 +104,9 @@ def handle_callback(update):
         'reply_markup': {'inline_keyboard': []}
     }
     response = requests.post(url, json=payload)
+
+
+    return response.json()
 
 
 def handle_input(update):
