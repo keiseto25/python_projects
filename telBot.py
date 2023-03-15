@@ -102,6 +102,7 @@ def parse_message(message):
         print("txt-->", txt)
     except:
         print("No message key found.")
+        chat_id , txt = None
     return chat_id, txt
 
 
