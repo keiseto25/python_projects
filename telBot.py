@@ -27,6 +27,8 @@ def index():
             elif txt == "/start":
                 start(chat_id)
             return Response('ok', status=200)
+        elif 'Você selecionou MATIC/USDC' in msgS or 'Você selecionou MATIC/USDT' in msgS:
+            handle_input(msg)
         elif 'callback_query' in msgS:
             handle_callback(msg)
             return Response('ok', status=200)
@@ -55,8 +57,16 @@ def start(chat_id):
         }
     }
     r = requests.post(url, json=payload)
-    update = r.json()
     print("start-->", payload)
+    # sendMsg(chat_id,"Digite o valor mínimo da pool:")
+    # lowPrice = request.json['message']['text']
+    # sendMsg(chat_id,"Digite o valor máximo da pool:")
+    # highPrice = request.json['message']['text']
+
+    return r.json()
+
+
+def handle_callback(update):
     query = update['callback_query']
     queryS = json.dumps(query)
     chat_id = query['message']['chat']['id']
@@ -68,13 +78,11 @@ def start(chat_id):
 
     # Perform action based on user choice
     if choice == '0xa374094527e1673a86de625aa59517c5de346d32':
-        # Do something for MATIC/USDC pair
-        pool_id = choice
-        message = "You selected MATIC/USDC."
+        # Do something for MATIC/USDC pair    
+        message = "Você selecionou MATIC/USDC."
     elif choice == '0x9b08288c3be4f62bbf8d1c20ac9c5e6f9467d8b7':
-        # Do something for MATIC/USDT pair
-        pool_id = choice
-        message = "You selected MATIC/USDT."
+        # Do something for MATIC/USDT pair        
+        message = "Você selecionou MATIC/USDT."
 
     # Send message to user to confirm their choice
     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
@@ -94,6 +102,10 @@ def start(chat_id):
     }
     response = requests.post(url, json=payload)
 
+
+def handle_input(update):
+    chat_id = update['message']['chat']['id']
+    pool_id = update['data']
     # Send request to subgraph API
     subgraph_url = 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon'
     query = """
@@ -158,8 +170,6 @@ def start(chat_id):
             ': \n\n ' + str(tPrice)
         print(txt)
         wLog(txt)
-
-    return r.json()
 
 
 def wLog(message):
