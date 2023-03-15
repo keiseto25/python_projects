@@ -13,7 +13,10 @@ def index():
     if request.method == 'POST':
         msg = request.get_json()
 
-        chat_id, txt = parse_message(msg)  # retrieve chat_id and txt from msg
+        if txt is not None and txt != "":
+            # retrieve chat_id and txt from msg
+            chat_id, txt = parse_message(msg)
+
         if txt == "/id":
             sendMsg(chat_id, "Your user id: " + str(chat_id))
         elif txt == "/start":
@@ -44,12 +47,13 @@ def start(chat_id):
         }
     }
     r = requests.post(url, json=payload)
-    #sendMsg(chat_id,"Digite o valor mínimo da pool:")
-    #lowPrice = request.json['message']['text']
-    #sendMsg(chat_id,"Digite o valor máximo da pool:")
-    #highPrice = request.json['message']['text']
+    # sendMsg(chat_id,"Digite o valor mínimo da pool:")
+    # lowPrice = request.json['message']['text']
+    # sendMsg(chat_id,"Digite o valor máximo da pool:")
+    # highPrice = request.json['message']['text']
 
     return r.json()
+
 
 def handle_callback(update):
     query = update['callback_query']
@@ -88,7 +92,12 @@ def sendMsg(chat_id, text):
 def parse_message(message):
     print("message-->", message)
     chat_id = message['message']['chat']['id']
-    txt = message['message']['text']
+
+    if 'text' in msg:
+        txt = message['message']['text']
+    else:
+        txt = None
+
     print("chat_id-->", chat_id)
     print("txt-->", txt)
     return chat_id, txt
