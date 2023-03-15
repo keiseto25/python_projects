@@ -56,10 +56,6 @@ def start(chat_id):
     }
     r = requests.post(url, json=payload)
     print("start-->", payload)
-    # sendMsg(chat_id,"Digite o valor mínimo da pool:")
-    # lowPrice = request.json['message']['text']
-    # sendMsg(chat_id,"Digite o valor máximo da pool:")
-    # highPrice = request.json['message']['text']
 
     return r.json()
 
@@ -151,7 +147,7 @@ def handleChoice(query, chat_id):
         # Do something for MATIC/USDT pair
         pool_id = choice
         message = "You selected MATIC/USDT."
-    return pool_id
+    
 
     # Send message to user to confirm their choice
     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
@@ -170,7 +166,7 @@ def handleChoice(query, chat_id):
         'reply_markup': {'inline_keyboard': []}
     }
     response = requests.post(url, json=payload)
-
+    return pool_id
 
 def wLog(message):
     with open('app.log', 'a') as f:
