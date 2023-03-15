@@ -93,7 +93,7 @@ def parse_message(message):
     print("message-->", message)
     chat_id = message['message']['chat']['id']
 
-    if 'text' in msg:
+    if 'text' in message:
         txt = message['message']['text']
     else:
         txt = None
