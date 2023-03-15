@@ -12,6 +12,7 @@ TOKEN = bot_token
 def index():
     if request.method == 'POST':
         msg = request.get_json()
+        print(msg)
         # retrieve chat_id and txt from msg
         if 'text' in msg:
             chat_id, txt = parse_message(msg)
