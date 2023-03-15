@@ -22,8 +22,10 @@ def index():
                 sendMsg(chat_id, "Your user id: " + str(chat_id))
             elif txt == "/start":
                 start(chat_id)
+        elif 'callback_query' in msgS:
+            handle_callback(msg)
 
-        return Response('ok', status=200)
+            return Response('ok', status=200)
     else:
         return "<h1>Welcome!</h1>"
 
