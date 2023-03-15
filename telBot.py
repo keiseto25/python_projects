@@ -102,7 +102,7 @@ def handle_callback(update):
             'reply_markup': {'inline_keyboard': []}
         }
         response = requests.post(url, json=payload)
-    else:
+
         # Send request to subgraph API
         subgraph_url = 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon'
         query = """
@@ -138,6 +138,8 @@ def handle_callback(update):
 
         # Get user input for low_price and high_price
         sendMsg(chat_id, 'Valor inicial:')
+    else:
+
         low_price_message = update['message']['text']
         lowPrice = float(low_price_message.text)
         sendMsg(chat_id, 'Valor final:')
