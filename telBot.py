@@ -130,7 +130,7 @@ def handle_callback(update):
     tPrice = float(token1_price)
     t0Symbol = token0['symbol']
     t1Symbol = token1['symbol']
-    timestamp = datetime.now(pytz.timezone(
+    timestamp = datetime.datetime.now(pytz.timezone(
         'America/Sao_Paulo')).strftime('%d/%m/%Y %H:%M:%S')
 
     # Get user input for low_price and high_price
