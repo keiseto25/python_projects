@@ -129,6 +129,8 @@ def handle_callback(update):
     else:
         print(
             f"Pool ID '{doc['poolid']}' for chat ID '{doc['chatid']}' already exists.")
+        doc = {'lastUpdate': ts}
+        update(doc, chat_id) # update timestamp even if the pool exists, so that it can pick the right pool when handling the range
 
     return response.json()
 
@@ -211,14 +213,17 @@ def updateIgnore(chat_id, flt, doc):
     else:
         print("The collection is empty")
 
-    # update = {'$set': doc}
-    # result = sorted_collection.update_one(filter, update)
+
+def update(doc, chatid):
+    update = {'$set': doc}
+    result = pools_collection.update_one(
+        {'chatid': chatid}, update)  # update the pools_collection with the update variable filtering by chatid
 
     # Check if the update was successful
-    # if result.modified_count > 0:
-      #  print("Value updated successfully")
-    # else:
-     #   print("Value not updated")
+    if result.modified_count > 0:
+        print("Value updated successfully")
+    else:
+        print("Value not updated")
 
 
 def handle_input(chat_id, txt):
