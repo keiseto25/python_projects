@@ -1,6 +1,6 @@
 import datetime
 from flask import Flask
-from flask import request, redirect, url_for
+from flask import request
 from flask import Response
 from info import bot_token
 import requests
@@ -9,6 +9,8 @@ import pytz
 
 app = Flask(__name__)
 TOKEN = bot_token
+info, interval = None
+flagInput = 0
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -26,15 +28,18 @@ def index():
                 sendMsg(chat_id, "Your user id: " + str(chat_id))
             elif txt == "/start":
                 start(chat_id)
+            else:
+                if flagInput == 0:
+                    handle_input(msg)
+                else:
+                    handle_input2(msg)
+
             return Response('ok', status=200)
 
         elif 'callback_query' in msgS:
-            info = handle_callback(msg)
+            handle_callback(msg)
             return Response('ok', status=200)
-    elif request.method == 'GET' and 'info' in request.args:
-        info = json.loads(request.args['info'])
-        handle_input(info)
-        return Response('ok', status=200)
+
     else:
         return "<h1>Welcome!</h1>"
 
@@ -81,10 +86,10 @@ def handle_callback(update):
     # Perform action based on user choice
     if choice == '0xa374094527e1673a86de625aa59517c5de346d32':
         # Do something for MATIC/USDC pair
-        message = "Você selecionou MATIC/USDC."
+        message = "MATIC/USDC: Defina o valor mínimo do intervalo:"
     elif choice == '0x9b08288c3be4f62bbf8d1c20ac9c5e6f9467d8b7':
         # Do something for MATIC/USDT pair
-        message = "Você selecionou MATIC/USDT."
+        message = "MATIC/USDT: Defina o valor mínimo do intervalo:"
 
     # Send message to user to confirm their choice
     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
@@ -111,13 +116,24 @@ def handle_callback(update):
     response = requests.post(url, json=payload)
     print("response-->", response.json())
     print("info-->", info)
-    redirect_url = url_for('handle_input', _method='POST',_fragment=info)
-    return redirect(redirect_url,code=307)
 
-@app.route('/handle_input', methods=['GET', 'POST'])
+
 def handle_input(query):
-    chat_id = query['chat_id']
-    pool_id = query['data']
+    lowPrice = query['message']['text']
+    chat_id = query['message']['chat']['id']
+    sendMsg(chat_id, 'Valor máximo do intervalo:')
+    flagInput = 1
+    interval = {'lowPrice': lowPrice}
+
+
+def handle_input2(query):
+    # Get user input for low_price and high_price
+    low_price_message = interval['lowPrice']
+    lowPrice = float(low_price_message.text)
+    high_price_message = query['message']['text']
+    highPrice = float(high_price_message.text)
+
+    pool_id = info['data']
     # Send request to subgraph API
     subgraph_url = 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon'
     query = """
@@ -150,14 +166,6 @@ def handle_input(query):
     t1Symbol = token1['symbol']
     timestamp = datetime.datetime.now(pytz.timezone(
         'America/Sao_Paulo')).strftime('%d/%m/%Y %H:%M:%S')
-
-    # Get user input for low_price and high_price
-    sendMsg(chat_id, 'Valor inicial:')
-    low_price_message = update['message']['text']
-    lowPrice = float(low_price_message.text)
-    sendMsg(chat_id, 'Valor final:')
-    high_price_message = update['message']['text']
-    highPrice = float(high_price_message.text)
 
     pVariationlow = ((float(lowPrice) - tPrice) / float(lowPrice)) * 100
     pVariationhigh = ((tPrice - float(highPrice)) / float(highPrice)) * 100
