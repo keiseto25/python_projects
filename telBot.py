@@ -55,7 +55,8 @@ def index():
 
 def start(chat_id):
     doc = {'ignore': 'false'}
-    updateIgnore(chat_id, doc)
+    flt = {'chatid': chat_id}
+    updateIgnore(chat_id, flt, doc)
     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
 
     payload = {
@@ -132,7 +133,7 @@ def handle_callback(update):
 
 def insertValue(doc):
     doc = doc
-    if (checkExist(doc) == 'NF'): # Check if exist before inserting
+    if (checkExist(doc) == 'NF'):  # Check if exist before inserting
         pools_collection.insert_one(doc)
 
 
@@ -165,11 +166,11 @@ def getIgnore(chat_id):
         return f"No ignore found for chat ID '{chat_id}'"
 
 
-def updateIgnore(chat_id, doc):
+def updateIgnore(chat_id, flt, doc):
 
     # Update a value in the collection
     # filter to identify the document to update
-    filter = {'chatid': chat_id}
+    filter = flt
     update = {'$set': doc}
     result = pools_collection.update_one(filter, update)
 
@@ -246,8 +247,10 @@ def handle_input(chat_id, txt):
         sendMsg(txt)
         print(txt)
 
-    doc = {'ignore': 'true'}
     updateIgnore(chat_id, doc)
+    doc = {'ignore': 'true'}
+    flt = {'chatid': chat_id, 'poolid': pool_id}
+    updateIgnore(chat_id, flt, doc)
 
 
 def sendMsg(chat_id, text):
