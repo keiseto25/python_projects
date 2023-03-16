@@ -173,23 +173,25 @@ def updateIgnore(chat_id, flt, doc):
         collection_list, key=lambda x: x["lastUpdate"], reverse=True)
     if sorted_collection:
         last_inserted_item = sorted_collection[0]
-    
 
-    # Get the last inserted item that matches the filter
-    # Check if the last inserted item matches the filter
-    if last_inserted_item.get('chat_id') == chat_id and all(last_inserted_item.get(k) == v for k, v in flt.items()):
-        # Update the last inserted item
-        update = {'$set': doc}
-        result = pools_collection.update_one(
-            {'_id': last_inserted_item['_id']}, update)
+        # Get the last inserted item that matches the filter
+        # Check if the last inserted item matches the filter
+        if last_inserted_item.get('chat_id') == chat_id and all(last_inserted_item.get(k) == v for k, v in flt.items()):
+            # Update the last inserted item
+            update = {'$set': doc}
+            result = pools_collection.update_one(
+                {'_id': last_inserted_item['_id']}, update)
 
-        # Check if the update was successful
-        if result.modified_count > 0:
-            print("Value updated successfully")
+            # Check if the update was successful
+            if result.modified_count > 0:
+                print("Value updated successfully")
+            else:
+                print("Value not updated")
         else:
-            print("Value not updated")
+            print("No matching item found")
     else:
-        print("No matching item found")
+        print("The collection is empty")
+
     # update = {'$set': doc}
     # result = sorted_collection.update_one(filter, update)
 
