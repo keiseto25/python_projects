@@ -123,7 +123,8 @@ def handle_callback(update):
     print("response-->", response.json())
 
     # Insert the value into the 'values' collection
-    doc = {'poolid': choice, 'chatid': chat_id}
+    ts = datetime.datetime.now()
+    doc = {'poolid': choice, 'chatid': chat_id, 'lastUpdate': ts}
     insertValue(doc)
     print(
         f"Pool ID '{doc['poolid']}' inserted successfully for chat ID '{doc['chatid']}'.")
@@ -171,14 +172,31 @@ def updateIgnore(chat_id, flt, doc):
     # Update a value in the collection
     # filter to identify the document to update
     filter = flt
-    update = {'$set': doc}
-    result = pools_collection.update_one(filter, update)
+    sorted_collection = sorted(
+        pools_collection, key=lambda x: x["lastUpdate"], reverse=True)
+    # Get the last inserted item that matches the filter
+    last_inserted_item = next((item for item in sorted_collection if all(
+        item[k] == v for k, v in flt.items())), None)
+    # Update the last inserted item that matches the filter
+    if last_inserted_item:
+        # Update the document with the new values
+        last_inserted_item.update(doc)
 
-    # Check if the update was successful
-    if result.modified_count > 0:
+        # Update the item in the collection
+        i = sorted_collection.index(last_inserted_item)
+        pools_collection[i] = last_inserted_item
+
         print("Value updated successfully")
     else:
         print("Value not updated")
+    # update = {'$set': doc}
+    # result = sorted_collection.update_one(filter, update)
+
+    # Check if the update was successful
+    # if result.modified_count > 0:
+      #  print("Value updated successfully")
+    # else:
+     #   print("Value not updated")
 
 
 def handle_input(chat_id, txt):
