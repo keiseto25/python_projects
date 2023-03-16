@@ -141,7 +141,7 @@ def insertValue(doc):
 def getPoolid(chat_id):
     # Filter for documents with a matching 'chatid'
     flt = {'chatid': chat_id}
-    collection_list = list(pools_collection.find())
+    collection_list = list(pools_collection.find(flt))
     sorted_collection = sorted(
         collection_list, key=lambda x: x["lastUpdate"], reverse=True)
     if sorted_collection:
