@@ -187,7 +187,7 @@ def updateIgnore(chat_id, flt, doc):
     # Update a value in the collection
     # filter to identify the document to update
     filter = flt
-    collection_list = list(pools_collection.find())
+    collection_list = list(pools_collection.find(flt))
     sorted_collection = sorted(
         collection_list, key=lambda x: x["lastUpdate"], reverse=True)
     if sorted_collection:
