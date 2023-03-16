@@ -269,8 +269,15 @@ def handle_input(chat_id, txt):
     timestamp = datetime.datetime.now(pytz.timezone(
         'America/Sao_Paulo')).strftime('%d/%m/%Y %H:%M:%S')
 
-    pVariationlow = ((float(lowPrice) - tPrice) / float(lowPrice)) * 100
-    pVariationhigh = ((tPrice - float(highPrice)) / float(highPrice)) * 100
+    # handling for 0
+    if (lowPrice == 0.0 or highPrice == 0.0):
+        txt = 'Favor informar valor maior que zero!'
+        print(txt)
+        sendMsg(chat_id, txt)
+        return
+    else:
+        pVariationlow = ((float(lowPrice) - tPrice) / float(lowPrice)) * 100
+        pVariationhigh = ((tPrice - float(highPrice)) / float(highPrice)) * 100
 
     if (tPrice < lowPrice):
         txt = '⚠️⬇️ <b>[' + timestamp + ']</b> : ' + t0Symbol + '/' + t1Symbol + ' abaixo de ' + \
