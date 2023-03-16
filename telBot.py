@@ -140,12 +140,27 @@ def insertValue(doc):
 
 def getPoolid(chat_id):
     # Filter for documents with a matching 'chatid'
-    filter = {'chatid': chat_id}
-    doc = pools_collection.find_one(filter)
-    if doc:
-        return doc['poolid']
+    flt = {'chatid': chat_id}
+    collection_list = list(pools_collection.find())
+    sorted_collection = sorted(
+        collection_list, key=lambda x: x["lastUpdate"], reverse=True)
+    if sorted_collection:
+        last_inserted_item = sorted_collection[0]
+
+        # Get the last inserted item that matches the filter
+        # Check if the last inserted item matches the filter
+        if last_inserted_item.get('chatid') == chat_id and all(last_inserted_item.get(k) == v for k, v in flt.items()):
+            return last_inserted_item
+        else:
+            print("No matching item found")
     else:
-        return f"No pool ID found for chat ID '{chat_id}'"
+        print("The collection is empty")
+    # flt = {'chatid': chat_id}
+    # doc = pools_collection.find_one(filter)
+    # if doc:
+    #    return doc['poolid']
+    # else:
+    #    return f"No pool ID found for chat ID '{chat_id}'"
 
 
 def checkExist(doc):
