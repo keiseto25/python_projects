@@ -77,10 +77,6 @@ def start(chat_id):
     }
     r = requests.post(url, json=payload)
     print("start-->", payload)
-    # sendMsg(chat_id,"Digite o valor mínimo da pool:")
-    # lowPrice = request.json['message']['text']
-    # sendMsg(chat_id,"Digite o valor máximo da pool:")
-    # highPrice = request.json['message']['text']
 
     return r.json()
 
@@ -175,7 +171,9 @@ def updateIgnore(chat_id, flt, doc):
     collection_list = list(pools_collection.find())
     sorted_collection = sorted(
         collection_list, key=lambda x: x["lastUpdate"], reverse=True)
-    last_inserted_item = sorted_collection[0]
+    if sorted_collection:
+        last_inserted_item = sorted_collection[0]
+    
 
     # Get the last inserted item that matches the filter
     # Check if the last inserted item matches the filter
