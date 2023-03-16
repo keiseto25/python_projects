@@ -34,7 +34,7 @@ def index():
         if 'text' in msgS and 'callback_query' not in msgS:
             # retrieve chat_id and txt from msg
             chat_id, txt = parse_message(msg)
-            print("ignore-->",getIgnore(chat_id))
+            print("ignore-->", getIgnore(chat_id))
             if txt == "/id":
                 sendMsg(chat_id, "Your user id: " + str(chat_id))
             elif txt == "/start":
@@ -221,29 +221,23 @@ def handle_input(chat_id, txt):
             '(-' + str(round(pVariationlow, 2)) + '%)'
         print(txt)
         sendMsg(chat_id, txt)
-        wLog(txt)
+
     elif (tPrice > highPrice):
         txt = '⚠️⬆️ <b>[' + timestamp + ']</b> : ' + t0Symbol + '/' + t1Symbol + ' acima de ' + \
             str(highPrice) + ': \n\n 👉 ' + str(tPrice) + \
             '(+' + str(round(pVariationhigh, 2)) + '%)'
         print(txt)
         sendMsg(chat_id, txt)
-        wLog(txt)
+
     else:
         txt = '[' + timestamp + '] : ' + t0Symbol + '/' + t1Symbol + ' dentro intervalo de ' + \
             str(lowPrice) + ' a ' + str(highPrice) + \
             ': \n\n ' + str(tPrice)
         sendMsg(txt)
         print(txt)
-        wLog(txt)
 
     doc = {'ignore': 'true'}
     updateIgnore(chat_id, doc)
-
-
-def wLog(message):
-    with open('app.log', 'a') as f:
-        f.write(message + '\n')
 
 
 def sendMsg(chat_id, text):
