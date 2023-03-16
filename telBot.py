@@ -6,17 +6,22 @@ from info import bot_token
 import requests
 import json
 import pytz
-import sqlite3
+import pymongo
+from pymongo import MongoClient
+import os
 
 
 app = Flask(__name__)
 TOKEN = bot_token
 
-# SQL config
-conn = sqlite3.connect('temp.db')
-c = conn.cursor()
-c.execute(
-    '''CREATE TABLE IF NOT EXISTS vData (chatid INTEGER PRIMARY KEY, poolid TEXT)''')
+# Connect to MongoDB
+MONGODB_URI = os.environ['MONGODB_URI']
+DB_NAME = os.environ['DB_NAME']
+
+client = MongoClient(MONGODB_URI)
+db = client[DB_NAME]
+pools_collection = db['pools']
+
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -113,17 +118,26 @@ def handle_callback(update):
     response = requests.post(url, json=payload)
     print("response-->", response.json())
 
-    c.execute("INSERT INTO vData (chatid,poolid) VALUES (?)", (chat_id, choice))
-    conn.commit()
+    # Insert the value into the 'values' collection
+    doc = {'poolid': choice, 'chatid': chat_id}
+    pools_collection.insert_one(doc)
+    print(f"Pool ID '{doc['poolid']}' inserted successfully for chat ID '{doc['chatid']}'.")
 
     return response.json()
 
+def getPoolid(chat_id):
+    filter = {'chatid': chat_id}  # Filter for documents with a matching 'chatid'
+    doc = pools_collection.find_one(filter)
+    if doc:
+        return doc['poolid']
+    else:
+        return f"No pool ID found for chat ID '{chat_id}'"
 
 def handle_input(chat_id, txt):
     range = txt.split("-")
     lowPrice = range[0].strip()
     highPrice = range[1].strip()
-    pool_id = selectOne('poolid', 'vData', 'chatid = '+chat_id)
+    pool_id = getPoolid(chat_id)
     print('lowPrice-->', lowPrice)
     print('highPrice-->', highPrice)
     print('pool_id-->', pool_id)
@@ -159,7 +173,7 @@ def handle_input(chat_id, txt):
     t0Symbol = token0['symbol']
     t1Symbol = token1['symbol']
     timestamp = datetime.datetime.now(pytz.timezone(
-        'America/Sao_Paulo')).strftime('%d/%m/%Y %H:%M:%S')    
+        'America/Sao_Paulo')).strftime('%d/%m/%Y %H:%M:%S')
 
     pVariationlow = ((float(lowPrice) - tPrice) / float(lowPrice)) * 100
     pVariationhigh = ((tPrice - float(highPrice)) / float(highPrice)) * 100
@@ -191,11 +205,7 @@ def wLog(message):
         f.write(message + '\n')
 
 
-def selectOne(col, tbl, condition):
-    c.execute("SELECT " + col + " FROM " + tbl + " where " +
-              condition + " ORDER BY id DESC LIMIT 1")
-    value = c.fetchone()[0]
-    return value
+
 
 
 def sendMsg(chat_id, text):
