@@ -111,8 +111,8 @@ def handle_callback(update):
     response = requests.post(url, json=payload)
     print("response-->", response.json())
     print("info-->", info)
-    redirect_url = url_for('index', _fragment=json.dumps(info))
-    return redirect(redirect_url)
+    redirect_url = url_for('handle_input', _fragment=json.dumps(info))
+    return redirect(redirect_url,code=307)
 
 
 def handle_input(query):
