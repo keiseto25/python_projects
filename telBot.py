@@ -176,7 +176,7 @@ def updateIgnore(chat_id, flt, doc):
 
         # Get the last inserted item that matches the filter
         # Check if the last inserted item matches the filter
-        if last_inserted_item.get('chat_id') == chat_id and all(last_inserted_item.get(k) == v for k, v in flt.items()):
+        if last_inserted_item.get('chatid') == chat_id and all(last_inserted_item.get(k) == v for k, v in flt.items()):
             # Update the last inserted item
             update = {'$set': doc}
             result = pools_collection.update_one(
