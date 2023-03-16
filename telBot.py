@@ -114,7 +114,7 @@ def handle_callback(update):
     redirect_url = url_for('handle_input', _fragment=json.dumps(info))
     return redirect(redirect_url,code=307)
 
-
+@app.route('/handle_input', methods=['GET', 'POST'])
 def handle_input(query):
     chat_id = query['chat_id']
     pool_id = query['data']
