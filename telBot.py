@@ -132,7 +132,8 @@ def handle_callback(update):
 
 def insertValue(doc):
     doc = doc
-    pools_collection.insert_one(doc)
+    if (checkExist(doc) == 'NF'): # Check if exist before inserting
+        pools_collection.insert_one(doc)
 
 
 def getPoolid(chat_id):
@@ -143,6 +144,15 @@ def getPoolid(chat_id):
         return doc['poolid']
     else:
         return f"No pool ID found for chat ID '{chat_id}'"
+
+
+def checkExist(doc):
+    filter = doc
+    doc = pools_collection.find_one(filter)
+    if doc:
+        return 'F'  # Found
+    else:
+        return 'NF'  # Not Found
 
 
 def getIgnore(chat_id):
