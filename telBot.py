@@ -121,17 +121,21 @@ def handle_callback(update):
     # Insert the value into the 'values' collection
     ts = datetime.datetime.now()
     doc = {'poolid': choice, 'chatid': chat_id, 'lastUpdate': ts}
-    insertValue(doc)
-    print(
-        f"Pool ID '{doc['poolid']}' inserted successfully for chat ID '{doc['chatid']}'.")
+    checkDoc = {'poolid': choice, 'chatid': chat_id}
+    if (checkExist(checkDoc) == 'NF'):  # Check if exist before inserting
+        insertValue(doc)
+        print(
+            f"Pool ID '{doc['poolid']}' inserted successfully for chat ID '{doc['chatid']}'.")
+    else:
+        print(
+            f"Pool ID '{doc['poolid']}' for chat ID '{doc['chatid']}' already exists.")
 
     return response.json()
 
 
 def insertValue(doc):
     doc = doc
-    if (checkExist(doc) == 'NF'):  # Check if exist before inserting
-        pools_collection.insert_one(doc)
+    pools_collection.insert_one(doc)
 
 
 def getPoolid(chat_id):
