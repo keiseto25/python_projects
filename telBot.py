@@ -120,12 +120,17 @@ def handle_callback(update):
     print("response-->", response.json())
 
     # Insert the value into the 'values' collection
-    doc = {'poolid': choice, 'chatid': chat_id, 'ignore': 'true'}
-    pools_collection.insert_one(doc)
+    doc = {'poolid': choice, 'chatid': chat_id}
+    insertValue(doc)
     print(
         f"Pool ID '{doc['poolid']}' inserted successfully for chat ID '{doc['chatid']}'.")
 
     return response.json()
+
+
+def insertValue(doc):
+    doc = doc
+    pools_collection.insert_one(doc)
 
 
 def getPoolid(chat_id):
@@ -148,12 +153,12 @@ def getIgnore(chat_id):
         return f"No ignore found for chat ID '{chat_id}'"
 
 
-def updateIgnore(chat_id):
+def updateIgnore(chat_id, doc):
 
     # Update a value in the collection
     # filter to identify the document to update
     filter = {'chatid': chat_id}
-    update = {'$set': {'ignore': 'false'}}
+    update = {'$set': doc}
     result = pools_collection.update_one(filter, update)
 
     # Check if the update was successful
@@ -229,6 +234,9 @@ def handle_input(chat_id, txt):
         sendMsg(txt)
         print(txt)
         wLog(txt)
+
+    doc = {'ignore': 'true'}
+    updateIgnore(chat_id, doc)
 
 
 def wLog(message):
