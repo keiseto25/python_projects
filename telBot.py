@@ -53,7 +53,8 @@ def index():
 
 
 def start(chat_id):
-    updateIgnore(chat_id)
+    doc = {'ignore': 'false'}
+    updateIgnore(chat_id, doc)
     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
 
     payload = {
