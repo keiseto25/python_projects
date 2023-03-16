@@ -2,7 +2,6 @@ import datetime
 from flask import Flask
 from flask import request
 from flask import Response
-from info import bot_token
 import requests
 import json
 import pytz
@@ -12,9 +11,8 @@ import os
 
 
 app = Flask(__name__)
-TOKEN = bot_token
-
-# Connect to MongoDB
+# Enviroment variables
+TOKEN = os.environ['BOT_TOKEN']
 MONGODB_URI = os.environ['MONGODB_URI']
 DB_NAME = os.environ['DB_NAME']
 
