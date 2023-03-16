@@ -150,7 +150,7 @@ def getPoolid(chat_id):
         # Get the last inserted item that matches the filter
         # Check if the last inserted item matches the filter
         if last_inserted_item.get('chatid') == chat_id and all(last_inserted_item.get(k) == v for k, v in flt.items()):
-            return last_inserted_item
+            return last_inserted_item['poolid']
         else:
             print("No matching item found")
     else:
