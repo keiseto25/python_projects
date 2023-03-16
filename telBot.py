@@ -111,7 +111,7 @@ def handle_callback(update):
     response = requests.post(url, json=payload)
     print("response-->", response.json())
     print("info-->", info)
-    redirect_url = url_for('handle_input', _fragment=info)
+    redirect_url = url_for('handle_input', _method='POST',_fragment=info)
     return redirect(redirect_url,code=307)
 
 @app.route('/handle_input', methods=['GET', 'POST'])
