@@ -1,6 +1,6 @@
 import datetime
 from flask import Flask
-from flask import request
+from flask import request, redirect, url_for
 from flask import Response
 from info import bot_token
 import requests
@@ -26,15 +26,15 @@ def index():
                 sendMsg(chat_id, "Your user id: " + str(chat_id))
             elif txt == "/start":
                 start(chat_id)
-            elif 'Você selecionou' in msgS:  # handle após usuario selecionar o par
-                handle_input(msg)
-
             return Response('ok', status=200)
 
         elif 'callback_query' in msgS:
-            handle_callback(msg)
+            info = handle_callback(msg)
             return Response('ok', status=200)
-
+    elif request.method == 'GET' and 'info' in request.args:
+        info = json.loads(request.args['info'])
+        handle_input(info)
+        return Response('ok', status=200)
     else:
         return "<h1>Welcome!</h1>"
 
@@ -110,7 +110,9 @@ def handle_callback(update):
     }
     response = requests.post(url, json=payload)
     print("response-->", response.json())
-    return info
+    print("info-->", info)
+    redirect_url = url_for('index', _fragment=json.dumps(info))
+    return redirect(redirect_url)
 
 
 def handle_input(query):
