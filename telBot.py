@@ -241,9 +241,9 @@ def handle_input(chat_id, txt):
         sendMsg(chat_id, txt)
 
     else:
-        txt = '[' + timestamp + '] : ' + t0Symbol + '/' + t1Symbol + ' dentro intervalo de ' + \
+        txt = '✅➡️<b>[' + timestamp + ']</b> : ' + t0Symbol + '/' + t1Symbol + ' dentro intervalo de ' + \
             str(lowPrice) + ' a ' + str(highPrice) + \
-            ': \n\n ' + str(tPrice)
+            ': \n\n 👉 ' + str(tPrice)
         sendMsg(chat_id, txt)
         print(txt)
 
