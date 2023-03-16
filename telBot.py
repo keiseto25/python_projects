@@ -23,7 +23,6 @@ db = client[DB_NAME]
 pools_collection = db['pools']
 
 
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -39,7 +38,7 @@ def index():
                 sendMsg(chat_id, "Your user id: " + str(chat_id))
             elif txt == "/start":
                 start(chat_id)
-            elif '-' in txt:  # handle após usuario selecionar o par
+            elif '-' in txt and getIgnore(chat_id) != 'true':  # handle após usuario selecionar o par
                 handle_input(chat_id, txt)
 
             return Response('ok', status=200)
@@ -119,19 +118,33 @@ def handle_callback(update):
     print("response-->", response.json())
 
     # Insert the value into the 'values' collection
-    doc = {'poolid': choice, 'chatid': chat_id}
+    doc = {'poolid': choice, 'chatid': chat_id, 'ignore': 'true'}
     pools_collection.insert_one(doc)
-    print(f"Pool ID '{doc['poolid']}' inserted successfully for chat ID '{doc['chatid']}'.")
+    print(
+        f"Pool ID '{doc['poolid']}' inserted successfully for chat ID '{doc['chatid']}'.")
 
     return response.json()
 
+
 def getPoolid(chat_id):
-    filter = {'chatid': chat_id}  # Filter for documents with a matching 'chatid'
+    # Filter for documents with a matching 'chatid'
+    filter = {'chatid': chat_id}
     doc = pools_collection.find_one(filter)
     if doc:
         return doc['poolid']
     else:
         return f"No pool ID found for chat ID '{chat_id}'"
+
+
+def getIgnore(chat_id):
+    # Filter for documents with a matching 'chatid'
+    filter = {'chatid': chat_id, 'ignore': 'true'}
+    doc = pools_collection.find_one(filter)
+    if doc:
+        return doc['ignore']
+    else:
+        return f"No ignore found for chat ID '{chat_id}'"
+
 
 def handle_input(chat_id, txt):
     range = txt.split("-")
@@ -206,14 +219,12 @@ def wLog(message):
         f.write(message + '\n')
 
 
-
-
-
 def sendMsg(chat_id, text):
     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
     payload = {
         'chat_id': chat_id,
-        'text': text
+        'text': text,
+        'parse_mode': 'HTML'
     }
 
     r = requests.post(url, json=payload)
