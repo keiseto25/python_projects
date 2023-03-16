@@ -34,6 +34,7 @@ def index():
         if 'text' in msgS and 'callback_query' not in msgS:
             # retrieve chat_id and txt from msg
             chat_id, txt = parse_message(msg)
+            print("ignore-->",getIgnore(chat_id))
             if txt == "/id":
                 sendMsg(chat_id, "Your user id: " + str(chat_id))
             elif txt == "/start":
