@@ -38,7 +38,8 @@ def index():
                 sendMsg(chat_id, "Your user id: " + str(chat_id))
             elif txt == "/start":
                 start(chat_id)
-            elif '-' in txt and getIgnore(chat_id) != 'true':  # handle após usuario selecionar o par
+            # handle após usuario selecionar o par e se flag ignore for false
+            elif '-' in txt and getIgnore(chat_id) != 'true':
                 handle_input(chat_id, txt)
 
             return Response('ok', status=200)
@@ -52,6 +53,7 @@ def index():
 
 
 def start(chat_id):
+    updateIgnore(chat_id)
     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
 
     payload = {
@@ -144,6 +146,21 @@ def getIgnore(chat_id):
         return doc['ignore']
     else:
         return f"No ignore found for chat ID '{chat_id}'"
+
+
+def updateIgnore(chat_id):
+
+    # Update a value in the collection
+    # filter to identify the document to update
+    filter = {'chatid': chat_id}
+    update = {'$set': {'ignore': 'false'}}
+    result = pools_collection.update_one(filter, update)
+
+    # Check if the update was successful
+    if result.modified_count > 0:
+        print("Value updated successfully")
+    else:
+        print("Value not updated")
 
 
 def handle_input(chat_id, txt):
