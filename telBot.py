@@ -135,8 +135,8 @@ def getPoolid(chat_id):
 
 def handle_input(chat_id, txt):
     range = txt.split("-")
-    lowPrice = range[0].strip()
-    highPrice = range[1].strip()
+    lowPrice = float(range[0].strip())
+    highPrice = float(range[1].strip())
     pool_id = getPoolid(chat_id)
     print('lowPrice-->', lowPrice)
     print('highPrice-->', highPrice)
@@ -196,6 +196,7 @@ def handle_input(chat_id, txt):
         txt = '[' + timestamp + '] : ' + t0Symbol + '/' + t1Symbol + ' dentro intervalo de ' + \
             str(lowPrice) + ' a ' + str(highPrice) + \
             ': \n\n ' + str(tPrice)
+        sendMsg(txt)
         print(txt)
         wLog(txt)
 
