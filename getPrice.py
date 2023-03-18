@@ -1,8 +1,11 @@
+from flask import Flask
 from utils import checkExist, updateIgnore, sendMsg
 import requests
 import datetime
 import json
 import pytz
+
+app = Flask(__name__)
 
 
 @app.route('/getPrice', methods=['POST'])
@@ -85,9 +88,13 @@ def getPrice(data):
         doc = {'ignore': 'true'}
         flt = {'chatid': chat_id, 'poolid': pool_id}
         updateIgnore(chat_id, flt, doc)
-        
+
     # else -> when ignore is found for chatid and poolid
     else:
         print(
             f"Pool ID" + pool_id + " is already being monitored.")
         return
+
+
+if __name__ == '__main__':
+    app.run()

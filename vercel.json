@@ -5,6 +5,11 @@
         "src": "telMon.py",
         "use": "@vercel/python",
         "config": {}
+      },
+      {
+        "src": "getPrice.py",
+        "use": "@vercel/python",
+        "config": {}
       }
     ],
     "routes": [
