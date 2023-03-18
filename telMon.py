@@ -234,13 +234,39 @@ def cronjob(data):
     end = json.dumps(data['highPrice'])
 
     # Define the job data to be updated, including the extended_data field
-    job_data = {
-        "job": {
-            "name": "Monitoring " + pid + " for chat id " + cid + " with range " + ini + "-"+end,
-            "url": "https://python-projects-keiseto25.vercel.app/getPrice",
-            "schedule": "*/5 * * * *",
-            "timezone": "America/Sao_Paulo"
+    job_data = {"job": {
+        "title": "tst",
+        "enabled": "true",
+        "saveResponses": 'true',
+        "url": "https://python-projects-keiseto25.vercel.app/getPrice",
+        "extendedData": {
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "body": "{\"lowPrice\":\""+ini+"\",\"highPrice\":\""+end+"\",\"pool_id\":\"+pid+""\",\"chat_id\":"+cid+"}"
+        },
+        "schedule": {
+            "timezone": "America/Sao_Paulo",
+            "hours": [
+                -1
+            ],
+            "mdays": [
+                -1
+            ],
+            "minutes": [
+                15,
+                30,
+                45
+            ],
+            "months": [
+                -1
+            ],
+            "wdays": [
+                -1
+            ]
         }
+    },
+        "requestMethod": 1
     }
 
     job_data['extended_data'] = data
@@ -262,7 +288,7 @@ def cronjob(data):
     if response.status_code == 200:
         print('Job created successfully!')
     else:
-        print(f'Payload-->',job_data)
+        print(f'Payload-->', job_data)
         print(f'Error updating job: {json.dumps(response.json())}')
 
 
