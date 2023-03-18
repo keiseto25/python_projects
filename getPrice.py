@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 @app.errorhandler(400)
 def handle_bad_request(e):
-    app.logger.error('Bad request: %s', request.data)
+    app.logger.error('Bad request: %s', request.json)
     return 'Bad request', 400
 
 
