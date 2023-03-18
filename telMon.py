@@ -243,7 +243,7 @@ def cronjob(data):
             "headers": {
                 "Content-Type": "application/json"
             },
-            "body": "{\"lowPrice\":\""+ini+"\",\"highPrice\":\""+end+"\",\"pool_id\":\""+pid+"\",\"chat_id\":"+cid+"}"
+            "body": "{\"lowPrice\":\""+ini+"\",\"highPrice\":\""+end+"\",\"pool_id\":"+pid+",\"chat_id\":"+cid+"}"
         },
         "schedule": {
             "timezone": "America/Sao_Paulo",
