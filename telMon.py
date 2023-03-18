@@ -288,7 +288,7 @@ def cronjob(data):
     else:
         print(f'Payload-->', job_data)
         print(f'Error updating job-->',response)
-    return response
+    return response.status_code
 
 
 def handle_input(chat_id, txt):
