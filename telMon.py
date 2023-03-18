@@ -243,7 +243,7 @@ def cronjob(data):
             "headers": {
                 "Content-Type": "application/json"
             },
-            "body": "{\"lowPrice\":\""+ini+"\",\"highPrice\":\""+end+"\",\"pool_id\":\"+pid+""\",\"chat_id\":"+cid+"}"
+            "body": "{\"lowPrice\":\""+ini+"\",\"highPrice\":\""+end+"\",\"pool_id\":\""+pid+"\",\"chat_id\":"+cid+"}"
         },
         "schedule": {
             "timezone": "America/Sao_Paulo",
@@ -268,8 +268,6 @@ def cronjob(data):
     },
         "requestMethod": 1
     }
-
-    job_data['extended_data'] = data
 
     # Define the API endpoint URL
     api_url = 'https://api.cron-job.org/jobs'
