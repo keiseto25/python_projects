@@ -262,7 +262,7 @@ def cronjob(data):
     if response.status_code == 200:
         print('Job created successfully!')
     else:
-        print(f'Error updating job: {response.text}')
+        print(f'Error updating job: {response}')
 
 
 def handle_input(chat_id, txt):
