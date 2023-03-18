@@ -9,12 +9,9 @@ import pymongo
 from pymongo import MongoClient
 import os
 
-TOKEN = '5821187711:AAHjFKprlsLuyeacptyLHNzTetCdr5-D2XM'
-#os.environ['BOT_TOKEN']
-MONGODB_URI = 'mongodb+srv://keiseto25:CpvU1zRRaknJXNSb@keiseto.wzkeenw.mongodb.net/test?retryWrites=true&w=majority'
-#os.environ['MONGODB_URI']
-DB_NAME = 'test'
-#os.environ['DB_NAME']
+TOKEN = os.environ['BOT_TOKEN']
+MONGODB_URI = os.environ['MONGODB_URI']
+DB_NAME = os.environ['DB_NAME']
 CRON_API = '1uKTRpu7D5c0P6mEAJF4sPCxqSUGiiyfXdPpuK+EpR0='
 
 client = MongoClient(MONGODB_URI)
