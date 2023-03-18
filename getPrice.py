@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import request
 from utils import checkExist, updateIgnore, sendMsg
 import requests
 import datetime
@@ -9,7 +10,8 @@ app = Flask(__name__)
 
 
 @app.route('/getPrice', methods=['POST'])
-def getPrice(data):
+def getPrice():
+    data = request
     msg = data.get_json()
     pool_id = msg['pool_id']
     chat_id = msg['chat_id']
