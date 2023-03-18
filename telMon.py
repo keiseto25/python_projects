@@ -263,7 +263,7 @@ def cronjob(data):
         print('Job created successfully!')
     else:
         print(f'Payload-->',job_data)
-        print(f'Error updating job: {response.json()}')
+        print(f'Error updating job: {json.dumps(response.json())}')
 
 
 def handle_input(chat_id, txt):
