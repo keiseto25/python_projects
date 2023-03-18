@@ -228,10 +228,10 @@ def updateTimestamp(doc, flt):
 
 def cronjob(data):
 
-    pid = data['pool_id']
-    cid = data['chat_id']
-    ini = data['lowPrice']
-    end = data['highPrice']
+    pid = json.dumps(data['pool_id'])
+    cid = json.dumps(data['chat_id'])
+    ini = json.dumps(data['lowPrice'])
+    end = json.dumps(data['highPrice'])
 
     # Define the job data to be updated, including the extended_data field
     job_data = {
