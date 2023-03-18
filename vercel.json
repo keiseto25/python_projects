@@ -10,11 +10,11 @@
     "routes": [
       {
         "src": "/",
-        "dest": "/telBot.py"
+        "dest": "/telMon.py"
       },
       {
-        "src": "/id",
-        "dest": "/telBot.py"
+        "src": "/getPrice",
+        "dest": "/getPrice.py"
       }
     ]
   }
