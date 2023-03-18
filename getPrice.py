@@ -20,8 +20,8 @@ def getPrice():
     msg = data.get_json()
     pool_id = msg['pool_id']
     chat_id = msg['chat_id']
-    lowPrice = msg['lowPrice']
-    highPrice = msg['highPrice']
+    lowPrice = float(msg['lowPrice'])
+    highPrice = float(msg['highPrice'])
 
     # Check if already have monitoring
     checkDoc = {'poolid': pool_id, 'chatid': chat_id, 'ignore': 'true'}
