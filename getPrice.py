@@ -95,6 +95,7 @@ def getPrice():
         doc = {'ignore': 'true'}
         flt = {'chatid': chat_id, 'poolid': pool_id}
         updateIgnore(chat_id, flt, doc)
+        return "Success"
 
     # else -> when ignore is found for chatid and poolid
     else:
