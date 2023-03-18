@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, Response
 from flask import request
 from utils import checkExist, updateIgnore, sendMsg
 import requests
@@ -7,6 +7,7 @@ import json
 import pytz
 
 app = Flask(__name__)
+
 
 @app.errorhandler(400)
 def handle_bad_request(e):
@@ -95,13 +96,14 @@ def getPrice():
         doc = {'ignore': 'true'}
         flt = {'chatid': chat_id, 'poolid': pool_id}
         updateIgnore(chat_id, flt, doc)
-        return "Success"
+        print("Monitoring added succesfully.")
+        return Response('ok', status=200)
 
     # else -> when ignore is found for chatid and poolid
     else:
         print(
             f"Pool ID" + pool_id + " is already being monitored.")
-        return
+        return Response('ok', status=200)
 
 
 if __name__ == '__main__':
