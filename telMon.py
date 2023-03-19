@@ -234,19 +234,19 @@ def cronjob(data):
     end = json.dumps(data['highPrice'])
 
     # Define the job data to be updated, including the extended_data field
-    job_data = {
+    json_data = {
         "job": {
             "title": "tst",
             "enabled": "true",
-            "saveResponses": 'true',
+            "saveResponses": True,
             "url": "https://python-projects-keiseto25.vercel.app/getPrice",
             "extendedData": {
                 "headers": {
                     "Content-Type": "application/json"
                 },
                 "body": json.dumps({
-                    "lowPrice": str(ini),
-                    "highPrice": str(end),
+                    "lowPrice": ini,
+                    "highPrice": end,
                     "pool_id": pid,
                     "chat_id": cid
                 })
@@ -271,16 +271,15 @@ def cronjob(data):
         'Authorization': f'Bearer {CRON_API}',
         'Content-Type': 'application/json'
     }
-    data = json.dumps({'job': job_data})
 
     # Send the API request using the requests library
-    response = requests.put(api_url, headers=headers, data=job_data)
+    response = requests.put(api_url, headers=headers, data=json_data)
 
     # Check the API response status code
     if response.status_code == 200:
         print('Job created successfully!')
     else:
-        print(f'Payload-->', job_data)
+        print(f'Payload-->', json_data)
         print(f'Error updating job-->', response)
     return response.status_code
 
