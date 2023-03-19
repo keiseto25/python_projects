@@ -247,7 +247,7 @@ def cronjob(data):
                 "body": json.dumps({
                     "lowPrice": str(ini),
                     "highPrice": str(end),
-                    "pool_id": pid,
+                    "pool_id": str(pid),
                     "chat_id": cid
                 })
             },
