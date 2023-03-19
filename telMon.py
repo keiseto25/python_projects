@@ -229,7 +229,7 @@ def updateTimestamp(doc, flt):
 def cronjob(data):
 
     pid = data['pool_id']
-    cid = json.dumps(data['chat_id'])
+    cid = data['chat_id']
     ini = json.dumps(data['lowPrice'])
     end = json.dumps(data['highPrice'])
 
@@ -244,7 +244,12 @@ def cronjob(data):
                 "headers": {
                     "Content-Type": "application/json"
                 },
-                "body": '\"{\"lowPrice\":\"" + str(ini) + "\",\"highPrice\":\"" + str(end) + "\",\"pool_id\":\"" + pid + "\",\"chat_id\":" + cid + "}\"'
+                "body": json.dumps({
+                    "lowPrice": str(ini),
+                    "highPrice": str(end),
+                    "pool_id": pid,
+                    "chat_id": cid
+                })
             },
             "schedule": {
                 "timezone": "America/Sao_Paulo",
