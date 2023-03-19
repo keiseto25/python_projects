@@ -239,6 +239,8 @@ def cronjob(data):
         "job": {
             "title": jobname,
             "enabled": "true",
+            "saveResponses": True,
+            "requestMethod": 1,
             "url": "https://python-projects-keiseto25.vercel.app/getPrice",
             "extendedData": {
                 "headers": {
@@ -259,8 +261,7 @@ def cronjob(data):
                 "months": [-1],
                 "wdays": [-1]
             }
-        },
-        "requestMethod": 2
+        }
     }
 
     # Define the API endpoint URL
