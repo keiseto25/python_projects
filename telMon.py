@@ -244,7 +244,7 @@ def cronjob(data):
                 "headers": {
                     "Content-Type": "application/json"
                 },
-                "body": "{\"lowPrice\":\"" + str(ini) + "\",\"highPrice\":\"" + str(end) + "\",\"pool_id\":\"" + pid + "\",\"chat_id\":" + cid + "}"
+                "body": "\"{\"lowPrice\":\"" + str(ini) + "\",\"highPrice\":\"" + str(end) + "\",\"pool_id\":\"" + pid + "\",\"chat_id\":" + cid + "}\""
             },
             "schedule": {
                 "timezone": "America/Sao_Paulo",
