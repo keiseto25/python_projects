@@ -228,7 +228,7 @@ def updateTimestamp(doc, flt):
 
 def cronjob(data):
 
-    pid = json.dumps(data['pool_id'])
+    pid = data['pool_id']
     cid = json.dumps(data['chat_id'])
     ini = json.dumps(data['lowPrice'])
     end = json.dumps(data['highPrice'])
