@@ -238,7 +238,7 @@ def cronjob(data):
         "job": {
             "title": "tst",
             "enabled": "true",
-            "saveResponses": True,
+            "saveResponses": 'true',
             "url": "https://python-projects-keiseto25.vercel.app/getPrice",
             "extendedData": {
                 "headers": {
