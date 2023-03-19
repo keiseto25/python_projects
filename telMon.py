@@ -232,12 +232,13 @@ def cronjob(data):
     cid = data['chat_id']
     ini = json.dumps(data['lowPrice'])
     end = json.dumps(data['highPrice'])
+    jobname = 'Pool: ' + pid + " - Chatid: " + json.dumps(cid)
 
     # Define the job data to be updated, including the extended_data field
     json_data = {
         "job": {
-            "title": "tst",
-            "enabled": "true",            
+            "title": jobname,
+            "enabled": "true",
             "url": "https://python-projects-keiseto25.vercel.app/getPrice",
             "extendedData": {
                 "headers": {
@@ -259,7 +260,7 @@ def cronjob(data):
                 "wdays": [-1]
             }
         },
-        "requestMethod": 1
+        "requestMethod": 2
     }
 
     # Define the API endpoint URL
@@ -300,7 +301,15 @@ def handle_input(chat_id, txt):
         'pool_id': pool_id,
         'chat_id': chat_id
     }
-    cronjob(cronData)
+    # Check if already have monitoring
+    checkDoc = {'poolid': pool_id, 'chatid': chat_id, 'ignore': 'true'}
+    if (checkExist(checkDoc) == 'NF'):
+        cronjob(cronData)
+     # else -> when ignore is found for chatid and poolid
+    else:
+        print(
+            f"Pool ID" + pool_id + " is already being monitored.")
+        return Response('ok', status=200)
 
 
 def sendMsg(chat_id, text):
