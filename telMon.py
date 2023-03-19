@@ -234,38 +234,32 @@ def cronjob(data):
     end = json.dumps(data['highPrice'])
 
     # Define the job data to be updated, including the extended_data field
-    job_data = {"job": {
-        "title": "tst",
-        "enabled": "true",
-        "saveResponses": 'true',
-        "url": "https://python-projects-keiseto25.vercel.app/getPrice",
-        "extendedData": {
-            "headers": {
-                "Content-Type": "application/json"
+    job_data = {
+        "job": {
+            "title": "tst",
+            "enabled": "true",
+            "saveResponses": True,
+            "url": "https://python-projects-keiseto25.vercel.app/getPrice",
+            "extendedData": {
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "body": json.dumps({
+                    "lowPrice": str(ini),
+                    "highPrice": str(end),
+                    "pool_id": pid,
+                    "chat_id": cid
+                })
             },
-            "body": "{\"lowPrice\":\""+ini+"\",\"highPrice\":\""+end+"\",\"pool_id\":"+pid+",\"chat_id\":"+cid+"}"
+            "schedule": {
+                "timezone": "America/Sao_Paulo",
+                "hours": [-1],
+                "mdays": [-1],
+                "minutes": [15, 30, 45],
+                "months": [-1],
+                "wdays": [-1]
+            }
         },
-        "schedule": {
-            "timezone": "America/Sao_Paulo",
-            "hours": [
-                -1
-            ],
-            "mdays": [
-                -1
-            ],
-            "minutes": [
-                15,
-                30,
-                45
-            ],
-            "months": [
-                -1
-            ],
-            "wdays": [
-                -1
-            ]
-        }
-    },
         "requestMethod": 1
     }
 
@@ -287,7 +281,7 @@ def cronjob(data):
         print('Job created successfully!')
     else:
         print(f'Payload-->', job_data)
-        print(f'Error updating job-->',response)
+        print(f'Error updating job-->', response)
     return response.status_code
 
 
