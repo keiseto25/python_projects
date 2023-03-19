@@ -271,14 +271,16 @@ def cronjob(data):
         'Content-Type': 'application/json'
     }
 
+    data = json.dumps(json_data)
+
     # Send the API request using the requests library
-    response = requests.put(api_url, headers=headers, data=json_data)
+    response = requests.put(api_url, headers=headers, data=data)
 
     # Check the API response status code
     if response.status_code == 200:
         print('Job created successfully!')
     else:
-        print(f'Payload-->', json_data)
+        print(f'Payload-->', data)
         print(f'Error updating job-->', response)
     return response.status_code
 
