@@ -84,9 +84,9 @@ def getPrice():
         sendMsg(chat_id, txt)
 
     else:
-        #txt = '✅➡️<b>[' + timestamp + ']</b> : ' + t0Symbol + '/' + t1Symbol + ' dentro intervalo de ' + \
-        #    str(lowPrice) + ' a ' + str(highPrice) + \
-        #    ': \n\n 👉 ' + str(tPrice)
+        txt = '✅➡️<b>[' + timestamp + ']</b> : ' + t0Symbol + '/' + t1Symbol + ' dentro intervalo de ' + \
+            str(lowPrice) + ' a ' + str(highPrice) + \
+            ': \n\n 👉 ' + str(tPrice)
         #sendMsg(chat_id, txt)
         print(txt)
 
