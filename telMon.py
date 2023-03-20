@@ -62,6 +62,7 @@ def setIgnoreFalse(chat_id):
 
 def remove(chat_id):
     setIgnoreFalse(chat_id)
+    sendMsg(chat_id, "Monitoramento removido com sucesso!")
 
 
 def start(chat_id):
@@ -107,40 +108,43 @@ def handle_callback(update):
         # Do something for MATIC/USDT pair
         message = "MATIC/USDT: Defina um intervalo separado por - (Ex: 1.2 - 2.0)"
 
-    # Send message to user to confirm their choice
-    url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
-    payload = {
-        'chat_id': chat_id,
-        'text': message
-    }
-    response = requests.post(url, json=payload)
-    print("handle_callback-->", payload)
-
-    # Hide the reply_markup
-    url = f'https://api.telegram.org/bot{TOKEN}/editMessageReplyMarkup'
-    payload = {
-        'chat_id': chat_id,
-        'message_id': message_id,
-        'reply_markup': {'inline_keyboard': []}
-    }
-    response = requests.post(url, json=payload)
-    print("response-->", response.json())
-
-    # Insert the value into the 'values' collection
-    ts = datetime.datetime.now()
-    doc = {'poolid': choice, 'chatid': chat_id, 'lastUpdate': ts}
-    checkDoc = {'poolid': choice, 'chatid': chat_id}
-    if (checkExist(checkDoc) == 'NF'):  # Check if exist before inserting
-        insertValue(doc)
-        print(
-            f"Pool ID '{doc['poolid']}' inserted successfully for chat ID '{doc['chatid']}'.")
+    checkDoc = {'poolid': choice, 'chatid': chat_id, 'ignore': 'true'}
+    if (checkExist(checkDoc) == 'NF'):  # Check if there's existing monitoring before proceeding
+        sendMsg(chat_id,"Já existe um monitoramento ativo para o par selecionado! Use /remove para remover monitoramentos atuais.")
     else:
-        print(
-            f"Pool ID '{doc['poolid']}' for chat ID '{doc['chatid']}' already exists.")
-        doc = {'lastUpdate': ts}
-        # update timestamp even if the pool exists, so that it can pick the right pool when handling the range
-        updateTimestamp(doc, checkDoc)
-        sendMsg(chat_id,"Já existe um monitoramento ativo para você neste par! Digite /remove caso queira retirar e informar um novo intervalo.")
+        # Send message to user to confirm their choice
+        url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
+        payload = {
+            'chat_id': chat_id,
+            'text': message
+        }
+        response = requests.post(url, json=payload)
+        print("handle_callback-->", payload)
+
+        # Hide the reply_markup
+        url = f'https://api.telegram.org/bot{TOKEN}/editMessageReplyMarkup'
+        payload = {
+            'chat_id': chat_id,
+            'message_id': message_id,
+            'reply_markup': {'inline_keyboard': []}
+        }
+        response = requests.post(url, json=payload)
+        print("response-->", response.json())
+
+        # Insert the value into the 'values' collection
+        ts = datetime.datetime.now()
+        doc = {'poolid': choice, 'chatid': chat_id, 'lastUpdate': ts}
+        checkDoc = {'poolid': choice, 'chatid': chat_id}
+        if (checkExist(checkDoc) == 'NF'):  # Check if exist before inserting
+            insertValue(doc)
+            print(
+                f"Pool ID '{doc['poolid']}' inserted successfully for chat ID '{doc['chatid']}'.")
+        else:
+            print(
+                f"Pool ID '{doc['poolid']}' for chat ID '{doc['chatid']}' already exists.")
+            doc = {'lastUpdate': ts}
+            # update timestamp even if the pool exists, so that it can pick the right pool when handling the range
+            updateTimestamp(doc, checkDoc)
 
     return response.json()
 
@@ -267,7 +271,7 @@ def cronjob(data):
                 "timezone": "America/Sao_Paulo",
                 "hours": [-1],
                 "mdays": [-1],
-                "minutes": [0,15, 30, 45],
+                "minutes": [0, 15, 30, 45],
                 "months": [-1],
                 "wdays": [-1]
             }
@@ -291,11 +295,11 @@ def cronjob(data):
     # Check the API response status code
     if response.status_code == 200:
         print('Job created successfully!')
-        sendMsg(cid,"Monitoramento ativado com sucesso!")
+        sendMsg(cid, "Monitoramento ativado com sucesso!")
     else:
         print(f'Payload-->', data)
         print(f'Error updating job-->', response)
-        sendMsg(cid,"Erro ao incluir monitoramento!")
+        sendMsg(cid, "Erro ao incluir monitoramento!")
     return response.status_code
 
 
@@ -317,7 +321,7 @@ def handle_input(chat_id, txt):
     # Check if already have monitoring
     checkDoc = {'poolid': pool_id, 'chatid': chat_id, 'ignore': 'true'}
     if (checkExist(checkDoc) == 'NF'):
-        cronjob(cronData)        
+        cronjob(cronData)
      # else -> when ignore is found for chatid and poolid
     else:
         print(
