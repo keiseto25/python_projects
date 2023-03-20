@@ -38,6 +38,8 @@ def index():
                 sendMsg(chat_id, "Your user id: " + str(chat_id))
             elif txt == "/start":
                 start(chat_id)
+            elif txt == "/remove":
+                remove(chat_id)
             # handle após usuario selecionar o par e se flag ignore for false
             elif '-' in txt and getIgnore(chat_id) != 'true':
                 handle_input(chat_id, txt)
@@ -52,10 +54,17 @@ def index():
         return "<h1>Welcome!</h1>"
 
 
-def start(chat_id):
+def setIgnoreFalse(chat_id):
     doc = {'ignore': 'false'}
     flt = {'chatid': chat_id}
     updateIgnore(chat_id, flt, doc)
+
+
+def remove(chat_id):
+    setIgnoreFalse(chat_id)
+
+
+def start(chat_id):
     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
 
     payload = {
@@ -131,6 +140,7 @@ def handle_callback(update):
         doc = {'lastUpdate': ts}
         # update timestamp even if the pool exists, so that it can pick the right pool when handling the range
         updateTimestamp(doc, checkDoc)
+        sendMsg(chat_id,"Já existe um monitoramento ativo para você neste par! Digite /remove caso queira retirar e informar um novo intervalo.")
 
     return response.json()
 
@@ -257,7 +267,7 @@ def cronjob(data):
                 "timezone": "America/Sao_Paulo",
                 "hours": [-1],
                 "mdays": [-1],
-                "minutes": [15, 30, 45],
+                "minutes": [0,15, 30, 45],
                 "months": [-1],
                 "wdays": [-1]
             }
@@ -281,9 +291,11 @@ def cronjob(data):
     # Check the API response status code
     if response.status_code == 200:
         print('Job created successfully!')
+        sendMsg(cid,"Monitoramento ativado com sucesso!")
     else:
         print(f'Payload-->', data)
         print(f'Error updating job-->', response)
+        sendMsg(cid,"Erro ao incluir monitoramento!")
     return response.status_code
 
 
@@ -305,7 +317,7 @@ def handle_input(chat_id, txt):
     # Check if already have monitoring
     checkDoc = {'poolid': pool_id, 'chatid': chat_id, 'ignore': 'true'}
     if (checkExist(checkDoc) == 'NF'):
-        cronjob(cronData)
+        cronjob(cronData)        
      # else -> when ignore is found for chatid and poolid
     else:
         print(
