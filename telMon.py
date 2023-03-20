@@ -74,22 +74,26 @@ def removeCronjob(chat_id):
 
     # Iterate over the cronJob values and call an API
     for cronJob in cronJobs:
-        api_url = "https://api.cron-job.org/jobs/" + str(cronJob['cronJob'])
-        print(api_url)
-        headers = {
-            'Authorization': f'Bearer {CRON_API}',
-            'Content-Type': 'application/json'
-        }
+        try:
+            api_url = "https://api.cron-job.org/jobs/" + \
+                str(cronJob['cronJob'])
+            print(api_url)
+            headers = {
+                'Authorization': f'Bearer {CRON_API}',
+                'Content-Type': 'application/json'
+            }
 
-        response = requests.delete(api_url, headers=headers)
+            response = requests.delete(api_url, headers=headers)
 
-        # Handle the response
-        if response.status_code == 200:
-            # Success
-            print("Job delete successfully!")
-        else:
-            # Error
-            print(f'Error updating job-->', response)
+            # Handle the response
+            if response.status_code == 200:
+                # Success
+                print("Job delete successfully!")
+            else:
+                # Error
+                print(f'Error updating job-->', response)
+        except Exception as e:
+            print(f"Error: {e} occurred for cronJob {cronJob}")
 
     doc = {'cronJob': ''}
     flt = {'chatid': chat_id}
@@ -337,11 +341,11 @@ def cronjob(data):
     if response.status_code == 200:
         print('Job created successfully!')
         sendMsg(cid, "Monitoramento ativado com sucesso!")
-        # Update cronJob value 
+        # Update cronJob value
         doc = {'cronJob': jobId}
         flt = {'poolid': pid, 'chatid': cid}
         setCronjob(flt, doc)
-        
+
         # Update ignore flag to true
         doc = {'ignore': 'true'}
         flt = {'chatid': cid, 'poolid': pid}
