@@ -69,18 +69,6 @@ def remove(chat_id):
 
 
 def removeCronjob(chat_id):
-    doc = {'cronJob': ''}
-    flt = {'chatid': chat_id}
-    update = {'$set': doc}
-    result = pools_collection.update_one(
-        flt, update)  # update the pools_collection with the update variable filtering by chatid
-
-    # Check if the update was successful
-    if result.modified_count > 0:
-        print("Cronjob updated successfully")
-    else:
-        print("Cronjob not updated")
-
     # Find all documents that match the chatId and retrieve the cronJob values
     cronJobs = pools_collection.find({"chatid": chat_id}, {"cronJob": 1})
 
@@ -102,6 +90,18 @@ def removeCronjob(chat_id):
         else:
             # Error
             print(f'Error updating job-->', response)
+
+    doc = {'cronJob': ''}
+    flt = {'chatid': chat_id}
+    update = {'$set': doc}
+    result = pools_collection.update_one(
+        flt, update)  # update the pools_collection with the update variable filtering by chatid
+
+    # Check if the update was successful
+    if result.modified_count > 0:
+        print("Cronjob updated successfully")
+    else:
+        print("Cronjob not updated")
 
 
 def start(chat_id):
