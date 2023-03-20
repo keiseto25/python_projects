@@ -74,7 +74,7 @@ def removeCronjob(chat_id):
 
     # Iterate over the cronJob values and call an API
     for cronJob in cronJobs:
-        api_url = "https://api.cron-job.org/jobs/" + cronJob['cronJob']
+        api_url = "https://api.cron-job.org/jobs/" + str(cronJob['cronJob'])
         print(api_url)
         headers = {
             'Authorization': f'Bearer {CRON_API}',
