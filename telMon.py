@@ -109,9 +109,9 @@ def handle_callback(update):
         message = "MATIC/USDT: Defina um intervalo separado por - (Ex: 1.2 - 2.0)"
 
     checkDoc = {'poolid': choice, 'chatid': chat_id, 'ignore': 'true'}
-    if (checkExist(checkDoc) == 'NF'):  # Check if there's existing monitoring before proceeding
+    if (checkExist(checkDoc) != 'NF'):  # Check if there's existing monitoring before proceeding
         sendMsg(chat_id, "Já existe um monitoramento ativo para o par selecionado! Use o comando remove para remover monitoramentos atuais.")
-
+        
     else:
         # Send message to user to confirm their choice
         url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
