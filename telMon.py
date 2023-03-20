@@ -93,7 +93,7 @@ def removeCronjob(chat_id):
                 # Error
                 print(f'Error updating job-->', response)
         except Exception as e:
-            print(f"Error: {e} occurred for cronJob {cronJob}")
+            print(e)
 
     doc = {'cronJob': ''}
     flt = {'chatid': chat_id}
