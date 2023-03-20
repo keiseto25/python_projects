@@ -61,8 +61,46 @@ def setIgnoreFalse(chat_id):
 
 
 def remove(chat_id):
-    setIgnoreFalse(chat_id)
+    setIgnoreFalse(chat_id)  # Update ignore flag
+
+    # Currently remove all monitorings, but it's possible to add feature to remove for user selected pools in the future if needed
+    removeCronjob(chat_id)
     sendMsg(chat_id, "Monitoramento removido com sucesso!")
+
+
+def removeCronjob(chat_id):
+    doc = {'cronJob': ''}
+    flt = {'chatid': chat_id}
+    update = {'$set': doc}
+    result = pools_collection.update_one(
+        flt, update)  # update the pools_collection with the update variable filtering by chatid
+
+    # Check if the update was successful
+    if result.modified_count > 0:
+        print("Cronjob updated successfully")
+    else:
+        print("Cronjob not updated")
+
+    # Find all documents that match the chatId and retrieve the cronJob values
+    cronJobs = pools_collection.find({"chatid": chat_id}, {"cronJob": 1})
+
+    # Iterate over the cronJob values and call an API
+    for cronJob in cronJobs:
+        api_url = "https://api.cron-job.org/jobs/" + str(cronJob)
+        headers = {
+            'Authorization': f'Bearer {CRON_API}',
+            'Content-Type': 'application/json'
+        }
+
+        response = requests.delete(api_url, headers=headers)
+
+        # Handle the response
+        if response.status_code == 200:
+            # Success
+            print("Job delete successfully!")
+        else:
+            # Error
+            print(f'Error updating job-->', response)
 
 
 def start(chat_id):
@@ -111,7 +149,7 @@ def handle_callback(update):
     checkDoc = {'poolid': choice, 'chatid': chat_id, 'ignore': 'true'}
     if (checkExist(checkDoc) != 'NF'):  # Check if there's existing monitoring before proceeding
         sendMsg(chat_id, "Já existe um monitoramento ativo para o par selecionado! Use o comando remove para remover monitoramentos atuais.")
-        
+
     else:
         # Send message to user to confirm their choice
         url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
@@ -292,16 +330,33 @@ def cronjob(data):
 
     # Send the API request using the requests library
     response = requests.put(api_url, headers=headers, data=data)
+    jobId = response[jobId]
 
     # Check the API response status code
     if response.status_code == 200:
         print('Job created successfully!')
         sendMsg(cid, "Monitoramento ativado com sucesso!")
+        doc = {'cronJob': jobId}
+        flt = {'poolid': pid, 'chatid': cid}
+        setCronjob(flt, doc)
+
     else:
         print(f'Payload-->', data)
         print(f'Error updating job-->', response)
         sendMsg(cid, "Erro ao incluir monitoramento!")
     return response.status_code
+
+
+def setCronjob(flt, doc):
+    update = {'$set': doc}
+    result = pools_collection.update_one(
+        flt, update)  # update the pools_collection with the update variable filtering by chatid
+
+    # Check if the update was successful
+    if result.modified_count > 0:
+        print("Cronjob updated successfully")
+    else:
+        print("Cronjob not updated")
 
 
 def handle_input(chat_id, txt):
@@ -323,7 +378,7 @@ def handle_input(chat_id, txt):
     checkDoc = {'poolid': pool_id, 'chatid': chat_id, 'ignore': 'true'}
     if (checkExist(checkDoc) == 'NF'):
         cronjob(cronData)
-     # else -> when ignore is found for chatid and poolid
+        # else -> when ignore is found for chatid and poolid
     else:
         print(
             f"Pool ID" + pool_id + " is already being monitored.")
