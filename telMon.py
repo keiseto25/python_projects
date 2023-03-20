@@ -330,7 +330,7 @@ def cronjob(data):
 
     # Send the API request using the requests library
     response = requests.put(api_url, headers=headers, data=data)
-    jobId = response['jobId']
+    jobId = response.json()['jobId']
 
     # Check the API response status code
     if response.status_code == 200:
