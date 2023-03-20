@@ -74,7 +74,7 @@ def removeCronjob(chat_id):
 
     # Iterate over the cronJob values and call an API
     for cronJob in cronJobs:
-        api_url = "https://api.cron-job.org/jobs/" + str(cronJob)
+        api_url = "https://api.cron-job.org/jobs/" + cronJob['cronJob']
         print(api_url)
         headers = {
             'Authorization': f'Bearer {CRON_API}',
@@ -337,9 +337,16 @@ def cronjob(data):
     if response.status_code == 200:
         print('Job created successfully!')
         sendMsg(cid, "Monitoramento ativado com sucesso!")
+        # Update cronJob value 
         doc = {'cronJob': jobId}
         flt = {'poolid': pid, 'chatid': cid}
         setCronjob(flt, doc)
+        
+        # Update ignore flag to true
+        doc = {'ignore': 'true'}
+        flt = {'chatid': cid, 'poolid': pid}
+        updateIgnore(cid, flt, doc)
+        print("Monitoring added succesfully.")
 
     else:
         print(f'Payload-->', data)
