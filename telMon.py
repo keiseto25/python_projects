@@ -241,7 +241,7 @@ def checkExist(doc):
 
 def getIgnore(chat_id):
     # Filter for documents with a matching 'chatid'
-    filter = {'chatid': chat_id, 'ignore': 'true'}
+    filter = {'chatid': chat_id}
     collection_list = list(pools_collection.find(filter))
     sorted_collection = sorted(
         collection_list, key=lambda x: x["lastUpdate"], reverse=True)
