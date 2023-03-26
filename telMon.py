@@ -157,7 +157,6 @@ def handle_callback(update):
     elif choice == '0x45dda9cb7c25131df268515131f647d726f50608':
         # Do something for WETH/USDC pair
         message = "WETH/USDC: Defina um intervalo separado por - (Ex: 1700 - 1750)"
-        
 
     checkDoc = {'poolid': choice, 'chatid': chat_id, 'ignore': 'true'}
     if (checkExist(checkDoc) != 'NF'):  # Check if there's existing monitoring before proceeding
@@ -243,11 +242,21 @@ def checkExist(doc):
 def getIgnore(chat_id):
     # Filter for documents with a matching 'chatid'
     filter = {'chatid': chat_id, 'ignore': 'true'}
-    doc = pools_collection.find_one(filter)
-    if doc:
-        return doc['ignore']
+    collection_list = list(pools_collection.find(filter))
+    sorted_collection = sorted(
+        collection_list, key=lambda x: x["lastUpdate"], reverse=True)
+
+    if sorted_collection:
+        last_inserted_item = sorted_collection[0]
+
+        # Get the last inserted item that matches the filter
+        # Check if the last inserted item matches the filter
+        if last_inserted_item.get('chatid') == chat_id and all(last_inserted_item.get(k) == v for k, v in filter.items()):
+            return last_inserted_item['ignore']
+        else:
+            return f"No ignore found for chat ID '{chat_id}'"
     else:
-        return f"No ignore found for chat ID '{chat_id}'"
+        print("The collection is empty")
 
 
 def updateIgnore(chat_id, flt, doc):
