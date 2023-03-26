@@ -252,7 +252,10 @@ def getIgnore(chat_id):
         # Get the last inserted item that matches the filter
         # Check if the last inserted item matches the filter
         if last_inserted_item.get('chatid') == chat_id and all(last_inserted_item.get(k) == v for k, v in filter.items()):
-            return last_inserted_item['ignore']
+            try:
+                return last_inserted_item['ignore']
+            except Exception as e:
+                print(e)
         else:
             return f"No ignore found for chat ID '{chat_id}'"
     else:
