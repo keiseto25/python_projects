@@ -51,7 +51,12 @@ def getPrice():
     pool = data['data']['pool']
     token0, token0_price, token1, token1_price = pool['token0'], pool[
         'token0Price'], pool['token1'], pool['token1Price']
-    tPrice = float(token1_price)
+    # token price to be monitored will always be the bigger one
+    if (float(token0_price) > float(token1_price)): 
+        tPrice = float(token0_price)
+    else:
+        tPrice = float(token1_price)
+
     t0Symbol = token0['symbol']
     t1Symbol = token1['symbol']
     timestamp = datetime.datetime.now(pytz.timezone(
@@ -87,7 +92,7 @@ def getPrice():
         txt = '✅➡️<b>[' + timestamp + ']</b> : ' + t0Symbol + '/' + t1Symbol + ' dentro intervalo de ' + \
             str(lowPrice) + ' a ' + str(highPrice) + \
             ': \n\n 👉 ' + str(tPrice)
-        #sendMsg(chat_id, txt)
+        # sendMsg(chat_id, txt)
         print(txt)
 
     doc = {'ignore': 'true'}

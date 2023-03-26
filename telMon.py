@@ -123,6 +123,10 @@ def start(chat_id):
                 {
                     "text": "MATIC/USDT",
                     "callback_data": "0x9b08288c3be4f62bbf8d1c20ac9c5e6f9467d8b7"
+                },
+                {
+                    "text": "WETH/USDC",
+                    "callback_data": "0x45dda9cb7c25131df268515131f647d726f50608"
                 }]
             ]
         }
@@ -150,6 +154,10 @@ def handle_callback(update):
     elif choice == '0x9b08288c3be4f62bbf8d1c20ac9c5e6f9467d8b7':
         # Do something for MATIC/USDT pair
         message = "MATIC/USDT: Defina um intervalo separado por - (Ex: 1.2 - 2.0)"
+    elif choice == '0x45dda9cb7c25131df268515131f647d726f50608':
+        # Do something for WETH/USDC pair
+        message = "WETH/USDC: Defina um intervalo separado por - (Ex: 1700 - 1750)"
+        
 
     checkDoc = {'poolid': choice, 'chatid': chat_id, 'ignore': 'true'}
     if (checkExist(checkDoc) != 'NF'):  # Check if there's existing monitoring before proceeding
