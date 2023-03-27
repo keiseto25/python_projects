@@ -57,7 +57,7 @@ def index():
 def setIgnoreFalse(chat_id):
     doc = {'ignore': 'false'}
     flt = {'chatid': chat_id}
-    updateIgnoreAll(chat_id, flt, doc)
+    updateIgnoreAll(doc, flt)
 
 
 def remove(chat_id):
