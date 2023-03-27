@@ -57,7 +57,7 @@ def index():
 def setIgnoreFalse(chat_id):
     doc = {'ignore': 'false'}
     flt = {'chatid': chat_id}
-    updateIgnore(chat_id, flt, doc)
+    updateIgnoreAll(chat_id, flt, doc)
 
 
 def remove(chat_id):
@@ -300,6 +300,18 @@ def updateTimestamp(doc, flt):
     # Check if the update was successful
     if result.modified_count > 0:
         print("Value updated successfully")
+    else:
+        print("Value not updated")
+
+
+def updateIgnoreAll(doc, flt):
+    update = {'$set': doc}
+    result = pools_collection.update_many(
+        flt, update)  # update the pools_collection with the update variable filtering by chatid
+
+    # Check if the update was successful
+    if result.modified_count > 0:
+        print(f'{result.modified_count} value(s) updated successfully')
     else:
         print("Value not updated")
 
